@@ -34,8 +34,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -55,6 +53,7 @@ import com.jgoodies.looks.LookUtils;
 import com.jgoodies.uif_lite.component.UIFSplitPane;
 import com.mobile.tool.stock.manager.entity.CustomerRecord;
 import com.mobile.tool.stock.manager.entity.EmployeeRecord;
+import com.mobile.tool.stock.manager.entity.SalesRecord;
 import com.mobile.tool.stock.manager.entity.UserLoginDetails;
 import com.mobile.tool.stock.manager.handler.UserRoleDefine;
 import com.mobile.tool.stock.manager.listener.AdminRoleMouseListener;
@@ -63,6 +62,7 @@ import com.mobile.tool.stock.manager.listener.EmployeeRoleMouseListener;
 import com.mobile.tool.stock.manager.model.StockManagementTableModel;
 import com.mobile.tool.stock.manager.repository.CustomerRecordsRepository;
 import com.mobile.tool.stock.manager.repository.EmployeeRecordsRepository;
+import com.mobile.tool.stock.manager.repository.SaleRecordsRepository;
 
 /**
  * Contains nested split panels and demonstrates how ClearLook removes obsolete
@@ -114,7 +114,7 @@ public class StockManagementTab {
 
 		switch (userRoleDefine) {
 		case ADMIN:
-			tree.addMouseListener(new AdminRoleMouseListener(tree));
+			tree.addMouseListener(new AdminRoleMouseListener(tree, (StockManagementTableModel) tableModel, userLoginDetails));
 			break;
 		case CUSTOMER:
 			tree.addMouseListener(new CustomerRoleMouseListener(tree,
@@ -162,24 +162,18 @@ public class StockManagementTab {
 					EmployeeRecordsRepository.getEmployeeRecordByUsername(userLoginDetails.getUsername())), 
 					EmployeeRecord.tableColumnNames);
 			table = new JTable(tableModel);
-			table.setRowSelectionInterval(2, 2);
 			break;
 		case CUSTOMER:
 			tableModel = new StockManagementTableModel(CustomerRecord.getTableModel(
 					CustomerRecordsRepository.getCustomerRecordByByUsername(userLoginDetails.getUsername())), 
 					CustomerRecord.attributeColumnNames);
 			table = new JTable(tableModel);
-			table.setRowSelectionInterval(2, 2);
 			break;
-		default:
-			tableModel = new StockManagementTableModel(createSampleTableData(),
-					new String[] { "Product Code", "Amount", "Customer" });
+		case ADMIN:
+			tableModel = new StockManagementTableModel(SalesRecord.getTableModel(
+					SaleRecordsRepository.getSaleRecordForToday()), 
+					SalesRecord.tableColumnNames);
 			table = new JTable(tableModel);
-			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-			table.getColumnModel().getColumn(0).setPreferredWidth(100);
-			table.getColumnModel().getColumn(1).setPreferredWidth(200);
-			table.getColumnModel().getColumn(2).setPreferredWidth(300);
-			table.setRowSelectionInterval(2, 2);
 			break;
 		}
 		 
@@ -239,16 +233,6 @@ public class StockManagementTab {
 		}
 
 		return new DefaultTreeModel(root);
-	}
-
-	/**
-	 * Creates and returns sample table data.
-	 */
-	private String[][] createSampleTableData() {
-		return new String[][] { { "CF0004", "25000", "ABC" },
-				{ "CF0047", "15000", "ABC" }, { "ED0004", "55000", "ABC" },
-				{ "AX2344", "5000", "ABC" }, { "AZ0876", "600", "ABC" },
-				{ "CF0001", "15000", "ABC" }, { "CF0000", "85000", "ABC" } };
 	}
 
 }

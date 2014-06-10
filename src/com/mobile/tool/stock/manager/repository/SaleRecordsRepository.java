@@ -2,7 +2,9 @@ package com.mobile.tool.stock.manager.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.mobile.tool.stock.manager.entity.CustomerRecord;
@@ -90,5 +92,11 @@ public class SaleRecordsRepository {
 	public static List<SalesRecord> getSaleRecordForCustomer(String customerCode) {
 		return getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE customer_code='"
 				+ customerCode + "' ORDER BY created desc");
+	}
+
+	public static List<SalesRecord> getSaleRecordForToday() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DATE, cal.get(Calendar.DATE)-3);
+		return getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE created>'"+new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime())+"'");
 	}
 }

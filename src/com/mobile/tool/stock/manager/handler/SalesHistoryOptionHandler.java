@@ -25,4 +25,12 @@ public class SalesHistoryOptionHandler {
 				CustomerRecordsRepository.getCustomerRecordByByUsername(userLoginDetails.getUsername()).getCustomerCode())), 
 		SalesRecord.tableColumnNames);
 	}
+
+	public static void handleSalesHistoryOptionSelectionForToday(
+			StockManagementTableModel tableModel) {
+		tableModel.refreshTableData(SalesRecord.getTableModel(
+				SaleRecordsRepository.getSaleRecordForToday()), 
+		SalesRecord.tableColumnNames);
+		
+	}
 }
