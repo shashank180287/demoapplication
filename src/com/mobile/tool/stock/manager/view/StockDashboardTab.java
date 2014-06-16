@@ -34,15 +34,17 @@ package com.mobile.tool.stock.manager.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.looks.LookUtils;
-import com.jgoodies.looks.plastic.PlasticInternalFrameUI;
+import com.mobile.tool.stock.manager.repository.SaleRecordsRepository;
 
 /** 
  * Demos the <code>JDesktopPane</code>.
@@ -70,126 +72,46 @@ public class StockDashboardTab {
         int extentX1 = (int) (193 * SIZE_FACTOR);
         int originX2 = originX1 + extentX1 + gap;
         int extentX2 = extentX1;
-        int originX3 = originX2 + extentX2 + gap;
-        int extentX3 = (int) (150 * SIZE_FACTOR);
         
         JDesktopPane desktop = new JDesktopPane();
         JInternalFrame frame;
 
-        frame = new JInternalFrame("Reportee Details", true, true, true, true);
-        frame.setContentPane(buildFrame1ContentPane());
+        frame = new JInternalFrame("Product Detasils", true, false, true, true);
+        frame.setContentPane(buildFrame2ContentPane(buildProductListTable()));
         frame.setBounds(originX1, 10, extentX1, 320);
         desktop.add(frame);
         frame.setVisible(true);
 
         frame = new JInternalFrame("Customer Detasils", true, false, true, true);
-        frame.setContentPane(buildFrame2ContentPane());
+        frame.setContentPane(buildFrame2ContentPane(buildCustomerListTable()));
         frame.setBounds(originX2, 10, extentX2, 320);
         desktop.add(frame);
         frame.setVisible(true);
 
-        JInternalFrame palette =
-            new JInternalFrame("Palette1", true, true, true, true);
-        palette.putClientProperty(
-            PlasticInternalFrameUI.IS_PALETTE,
-            Boolean.TRUE);
-        palette.setContentPane(buildPaletteContentPane());
-        palette.setBounds(originX3, 10, extentX3, 150);
-        palette.setVisible(true);
-        desktop.add(palette, JLayeredPane.PALETTE_LAYER);
-
-        palette = new JInternalFrame("Palette2", true, true, true, true);
-        palette.putClientProperty(
-            PlasticInternalFrameUI.IS_PALETTE,
-            Boolean.TRUE);
-        palette.setContentPane(buildBackgroundTestContentPane());
-        palette.setBounds(originX3, 170, extentX3, 160);
-        palette.setVisible(true);
-        desktop.add(palette, JLayeredPane.PALETTE_LAYER);
 
         return desktop;
     }
 
-    private JComponent buildFrame1ContentPane() {
-        JScrollPane scrollPane = new JScrollPane(new JTree());
+	private JComponent buildFrame2ContentPane(JTable table) {
+        JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(100, 140));
         return scrollPane;
     }
 
-    private JComponent buildFrame2ContentPane() {
-        JScrollPane scrollPane = new JScrollPane(buildTable());
-        scrollPane.setPreferredSize(new Dimension(100, 140));
-        return scrollPane;
-    }
 
-    private JComponent buildPaletteContentPane() {
-        Border CARD_DIALOG_BORDER = new EmptyBorder(10, 6, 7, 6);
-        Box box = Box.createVerticalBox();
-        box.add(new JCheckBox("Do it", true));
-        box.add(Box.createVerticalStrut(6));
-        box.add(new JCheckBox("don't do it", true));
-
-        JPanel generalTab = new JPanel(new BorderLayout());
-        generalTab.add(box);
-        generalTab.setBorder(CARD_DIALOG_BORDER);
-
-        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.BOTTOM);
-        tabbedPane.add(generalTab, "General");
-        tabbedPane.add(new JLabel("Test1"), "Filter");
-        return tabbedPane;
-    }
-
-    private JComponent buildBackgroundTestContentPane() {
-        JTextArea area1 =
-            new JTextArea("Bla.");
-        area1.setBackground(UIManager.getColor("control"));
-        JTextArea area2 =
-            new JTextArea("Bla Bla");
-        area2.setOpaque(false);
-        JPanel grid = new JPanel(new GridLayout(2, 1));
-        grid.add(area1);
-        grid.add(area2);
-        grid.setOpaque(false);
-        return grid;
-    }
-
-    /**
-     * Builds and answers a sample table.
-     */
-    private JTable buildTable() {
+	private JTable buildProductListTable() {
         JTable table = new JTable(
-                createSampleTableData(),
-                new String[] { "Customer", "Balance Amount" });
-
-        //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.getColumnModel().getColumn(0).setPreferredWidth(125);
-        table.getColumnModel().getColumn(1).setPreferredWidth(125);
-        table.setRowSelectionInterval(2, 2);
+        		SaleRecordsRepository.getProductSalesRecord(),
+                new String[] { "Product", "Balance" });
         return table;
-    }
-
-    /**
-     * Creates and answers sample table data.
-     */
-    private String[][] createSampleTableData() {
-        return new String[][] { 
-            { "ABC", "100000"}, 
-            { "VFD", "-48521"}, 
-            { "AWF", "545521" }, 
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-            { "",               ""           },
-        };
-    }
+	}
+	
+	
+	private JTable buildCustomerListTable() {
+        JTable table = new JTable(
+        		SaleRecordsRepository.getCustomerSalesRecord(),
+                new String[] { "Customer", "Balance" });
+        return table;
+	}
 
 }

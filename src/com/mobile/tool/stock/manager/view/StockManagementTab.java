@@ -114,7 +114,7 @@ public class StockManagementTab {
 
 		switch (userRoleDefine) {
 		case ADMIN:
-			tree.addMouseListener(new AdminRoleMouseListener(tree, (StockManagementTableModel) tableModel, userLoginDetails));
+			tree.addMouseListener(new AdminRoleMouseListener(tree, (StockManagementTableModel) tableModel, userLoginDetails).addButtonPanel(btnPnl));
 			break;
 		case CUSTOMER:
 			tree.addMouseListener(new CustomerRoleMouseListener(tree,
@@ -160,7 +160,7 @@ public class StockManagementTab {
 		case EMPLOYEE:
 			tableModel = new StockManagementTableModel(EmployeeRecord.getTableModel(
 					EmployeeRecordsRepository.getEmployeeRecordByUsername(userLoginDetails.getUsername())), 
-					EmployeeRecord.tableColumnNames);
+					EmployeeRecord.attributeColumnNames);
 			table = new JTable(tableModel);
 			break;
 		case CUSTOMER:
@@ -201,7 +201,7 @@ public class StockManagementTab {
 			parent.add(new DefaultMutableTreeNode("Vendor List"));
 			parent.add(new DefaultMutableTreeNode("Product Order"));
 			//
-			parent = new DefaultMutableTreeNode("Transection");
+			parent = new DefaultMutableTreeNode("Transaction");
 			root.add(parent);
 			MutableTreeNode salesHistory =new DefaultMutableTreeNode("Sales History");
 			parent.add(salesHistory);
@@ -209,6 +209,7 @@ public class StockManagementTab {
 			parent = new DefaultMutableTreeNode("Manage");
 			root.add(parent);
 			parent.add(new DefaultMutableTreeNode("Manage User"));
+			parent.add(new DefaultMutableTreeNode("Manage Records"));
 			selectionPath = new TreePath(((DefaultMutableTreeNode)salesHistory).getPath());
 		}
 			break;

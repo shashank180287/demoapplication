@@ -1,16 +1,20 @@
 package com.mobile.tool.stock.manager.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecordKeeping {
 
-	private int recordId;
+	private Integer recordId;
 	private String type;
 	private String tag;
 	private String comment;
-
+	public static String[] tableColumnNames = new String[] {"Tag", "Comment", "Attached"};
+	
 	public RecordKeeping() {
 	}
 
-	public RecordKeeping(int recordId, String type, String tag, String comment) {
+	public RecordKeeping(Integer recordId, String type, String tag, String comment) {
 		super();
 		this.recordId = recordId;
 		this.type = type;
@@ -56,4 +60,15 @@ public class RecordKeeping {
 				+ ", tag=" + tag + ", comment=" + comment + "]";
 	}
 	
+	public static String[][] getTableModel(List<RecordKeeping> recordKeepings) {
+		List<String[]> tableModel = new ArrayList<>();
+		for (RecordKeeping recordKeeping : recordKeepings) {
+			String tag = recordKeeping.getTag();
+			String[] record = new String[]{recordKeeping.getType(), recordKeeping.getComment(), (tag!=null && tag.contains("."))?tag.substring(0, tag.lastIndexOf(".")):""};
+			tableModel.add(record);
+		}
+		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
+		return tableModelArray;
+	}
 }

@@ -1,5 +1,8 @@
 package com.mobile.tool.stock.manager.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VendorRecord {
 
 	private String vendorCode;
@@ -13,6 +16,8 @@ public class VendorRecord {
 	private String permanentAddress;
 	private	String website;
 	private UserLoginDetails userLoginDetails;
+	public static String[] tableColumnNames = new String[]{"Vendor Code", "Category", "Name", "Title", "Mobile Number",
+		"Email", "Description", "Contact Address", "Permanent Address", "Website", "Username"};
 	
 	public VendorRecord() {
 	}
@@ -132,6 +137,20 @@ public class VendorRecord {
 				+ contactAddress + ", permanentAddress=" + permanentAddress
 				+ ", website=" + website + ", userLoginDetails="
 				+ userLoginDetails + "]";
+	}
+	
+	public static String[][] getTableModel(List<VendorRecord> vendorRecords) {
+		List<String[]> tableModel = new ArrayList<>();
+		for (VendorRecord vendorRecord : vendorRecords) {
+			String[] customer = new String[]{vendorRecord.getVendorCode(), vendorRecord.getVendorCategory().getVendorCategoryName(), 
+					vendorRecord.getName(), vendorRecord.getTitle(), vendorRecord.getMobilenumber()+"", vendorRecord.getEmail(), 
+					vendorRecord.getDescription(), vendorRecord.getContactAddress(), vendorRecord.getPermanentAddress(), 
+					vendorRecord.getWebsite(), vendorRecord.getUserLoginDetails()!=null?vendorRecord.getUserLoginDetails().getUsername():""};
+			tableModel.add(customer);
+		}
+		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
+		return tableModelArray;
 	}
 
 }

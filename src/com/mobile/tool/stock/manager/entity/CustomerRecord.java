@@ -124,10 +124,11 @@ public class CustomerRecord {
 		for (CustomerRecord customerRecord : customerRecords) {
 			String[] customer = new String[]{customerRecord.getCustomerCode(), customerRecord.getFirstName(), customerRecord.getLastName(), 
 					customerRecord.getMobileNumber()+"", customerRecord.getEmail(), customerRecord.getGender(), customerRecord.getContactAddress(), 
-					customerRecord.getCreated().toString(), customerRecord.getWebsite(), customerRecord.getDescription(), customerRecord.getUserLoginDetails().getUsername()};
+					customerRecord.getCreated().toString(), customerRecord.getWebsite(), customerRecord.getDescription(), customerRecord.getUserLoginDetails()!=null?customerRecord.getUserLoginDetails().getUsername():""};
 			tableModel.add(customer);
 		}
 		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
 		return tableModelArray;
 	}
 	

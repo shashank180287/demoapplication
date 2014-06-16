@@ -1,5 +1,6 @@
 package com.mobile.tool.stock.manager.repository;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,13 +15,21 @@ public class CustomerRecordsRepository {
 	
 
 	public static void addCustomerRecord(CustomerRecord customerRecord) {
-		String query = "INSERT INTO CUSTOMER_RECORD VALUES ('"+(customerRecord.getFirstName().toUpperCase().substring(0, 3)+customerRecord.getLastName().toUpperCase().substring(0, 3)+Math.random())+"',"
-								+customerRecord.getFirstName()+"','"+customerRecord.getLastName()+"',"+customerRecord.getMobileNumber()+","
-								+customerRecord.getEmail()+"','"+customerRecord.getGender()+"','"+customerRecord.getContactAddress()+"',"
-								+customerRecord.getCreated()+",'"+customerRecord.getWebsite()+"','"+customerRecord.getDescription()+"','"+customerRecord.getUserLoginDetails().getUsername()+")";
+		String query = "INSERT INTO CUSTOMER_RECORD VALUES ('"+(customerRecord.getFirstName().toUpperCase().substring(0, 3)+customerRecord.getLastName().toUpperCase().substring(0, 3)+getRandomNo())+"','"
+								+customerRecord.getFirstName()+"','"+customerRecord.getLastName()+"',"+customerRecord.getMobileNumber()+",'"
+								+customerRecord.getEmail()+"','"+customerRecord.getGender()+"','"+customerRecord.getContactAddress()+"','"
+								+new Date(System.currentTimeMillis())+"','"+customerRecord.getWebsite()+"','"+customerRecord.getDescription()+"',"+(customerRecord.getUserLoginDetails()!=null?"'"+customerRecord.getUserLoginDetails().getUsername()+"'":"NULL")+")";
 		jdbcTemplate.executeUpdate(query);
 	}
 
+	private static int getRandomNo() {
+		return (int) (Math.random()*1000);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getRandomNo());
+	}
+	
 	public static void removeCustomerRecord(CustomerRecord customerRecord) {
 		if(customerRecord.getCustomerCode()==null)
 			throw new IllegalArgumentException("customer code can not be null");

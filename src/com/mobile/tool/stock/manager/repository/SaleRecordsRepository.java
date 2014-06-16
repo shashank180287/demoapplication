@@ -96,7 +96,66 @@ public class SaleRecordsRepository {
 
 	public static List<SalesRecord> getSaleRecordForToday() {
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DATE, cal.get(Calendar.DATE)-3);
+		cal.set(Calendar.DATE, cal.get(Calendar.DATE)-1);
 		return getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE created>'"+new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime())+"'");
 	}
+	
+	public static String[][] getCustomerSalesRecord() {
+		List<String[]> salesRecord = new ArrayList<String[]>();
+		ResultSet salesRecordInDb = null;
+		try {
+			salesRecordInDb = jdbcTemplate.executeQuery("select customer_code, sum(confirm_amount) from sales_records group by customer_code order by sum(confirm_amount) desc");
+			if (salesRecordInDb != null) {
+				while (salesRecordInDb.next()) {
+					String customerCode = salesRecordInDb
+							.getString("customer_code");
+					CustomerRecord cusotmer = CustomerRecordsRepository
+							.getCustomerRecordByCustomerCode(customerCode);
+					salesRecord.add(new String[]{cusotmer.getFirstName()+" "+cusotmer.getLastName(), salesRecordInDb.getDouble("sum")+""});
+				}
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (salesRecordInDb != null)
+				try {
+					salesRecordInDb.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		String[][] sales = new String[salesRecord.size()][];
+		salesRecord.toArray(sales);
+		return sales;
+	}
+	
+	public static String[][] getProductSalesRecord() {
+		List<String[]> salesRecord = new ArrayList<String[]>();
+		ResultSet salesRecordInDb = null;
+		try {
+			salesRecordInDb = jdbcTemplate.executeQuery("select product_code, sum(confirm_amount) from sales_records group by product_code order by sum(confirm_amount) desc");
+			if (salesRecordInDb != null) {
+				while (salesRecordInDb.next()) {
+					String productCode = salesRecordInDb
+							.getString("product_code");
+					ProductRecord product = ProductRecordRepository
+							.getProductRecordByCode(productCode);
+					salesRecord.add(new String[]{product.getName(), salesRecordInDb.getDouble("sum")+""});
+				}
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (salesRecordInDb != null)
+				try {
+					salesRecordInDb.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		String[][] sales = new String[salesRecord.size()][];
+		salesRecord.toArray(sales);
+		return sales;
+	}
+
 }

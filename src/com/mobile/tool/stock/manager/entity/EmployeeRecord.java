@@ -1,6 +1,8 @@
 package com.mobile.tool.stock.manager.entity;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeRecord {
 
@@ -23,7 +25,9 @@ public class EmployeeRecord {
 	private String reference1;
 	private String reference2;
 	private String reference3;
-	public static String[] tableColumnNames = new String[]{"Attribute Name","Attribute Value"};
+	public static String[] tableColumnNames = new String[]{"Employee Code","First Name","Last Name","Mobile Number",
+		"Email", "Gender", "Contact Address", "Employeed", "Job Title", "Manager", "Username"};
+	public static String[] attributeColumnNames = new String[]{"Attribute Name","Attribute Value"};
 	
 	public EmployeeRecord() {
 	}
@@ -225,6 +229,20 @@ public class EmployeeRecord {
 				+ "]";
 	}
 
+	public static String[][] getTableModel(List<EmployeeRecord> employeeRecords) {
+		List<String[]> tableModel = new ArrayList<>();
+		for (EmployeeRecord employeeRecord : employeeRecords) {
+			String[] customer = new String[]{employeeRecord.getEmployeeCode(), employeeRecord.getFirstname(), employeeRecord.getLastname(), 
+					employeeRecord.getMobilenumber()+"", employeeRecord.getEmail(), employeeRecord.getGender(), employeeRecord.getContactAddress(), 
+					employeeRecord.getEmployeed().toString(), employeeRecord.getJobTitle(), (employeeRecord.getManager()!=null?employeeRecord.getManager().getFirstname()+" "+
+					employeeRecord.getManager().getLastname():""), employeeRecord.getUserLoginDetail()!=null?employeeRecord.getUserLoginDetail().getUsername():""};
+			tableModel.add(customer);
+		}
+		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
+		return tableModelArray;
+	}
+	
 	public static String[][] getTableModel(EmployeeRecord employeeRecordByUsername) {
 		 String[][] tableModelArray = new String[][]{{"Employee Code" , employeeRecordByUsername.getEmployeeCode()}, 
 				 {"Name", employeeRecordByUsername.getFirstname() +" "+ employeeRecordByUsername.getLastname()},

@@ -1,6 +1,8 @@
 package com.mobile.tool.stock.manager.entity;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductRecord {
 
@@ -13,6 +15,8 @@ public class ProductRecord {
 	private int orderCount;
 	private VendorRecord vendor;
 	private Date created;
+	public static String[] tableColumnNames = new String[]{"Product Code", "Category", "Name", "Description", "Unit Price",
+		"Bulk Price", "Order Count", "Vender", "Created"};
 	
 	public ProductRecord() {
 	}
@@ -111,6 +115,19 @@ public class ProductRecord {
 				+ ", desc=" + desc + ", unitPrice=" + unitPrice
 				+ ", bulkPrice=" + bulkPrice + ", orderCount=" + orderCount
 				+ ", vendor=" + vendor + ", created=" + created + "]";
+	}
+
+	public static String[][] getTableModel(List<ProductRecord> productRecords) {
+		List<String[]> tableModel = new ArrayList<>();
+		for (ProductRecord productRecord : productRecords) {
+			String[] customer = new String[]{productRecord.getProductCode(), productRecord.getProductcategory().getCategoryName(), 
+					productRecord.getName(), productRecord.getDesc(), productRecord.getUnitPrice()+"", productRecord.getBulkPrice()+"", 
+					productRecord.getOrderCount()+"", productRecord.getVendor().getName(), productRecord.getCreated().toString()};
+			tableModel.add(customer);
+		}
+		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
+		return tableModelArray;
 	}
 
 }

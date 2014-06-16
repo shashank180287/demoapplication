@@ -13,4 +13,12 @@ public class CustomerDetailsOptionHandler {
 				CustomerRecordsRepository.getCustomerRecordByByUsername(userLoginDetails.getUsername())), 
 				CustomerRecord.attributeColumnNames);
 	}
+
+	public static void handleCustomerDetailsOptionSelectionForAdmin(
+			StockManagementTableModel tableModel) {
+		tableModel.refreshTableData(CustomerRecord.getTableModel(
+				CustomerRecordsRepository.getAllCustomerRecords()), 
+				CustomerRecord.tableColumnNames);
+		
+	}
 }

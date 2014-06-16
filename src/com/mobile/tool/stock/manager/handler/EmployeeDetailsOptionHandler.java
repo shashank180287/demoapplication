@@ -11,6 +11,13 @@ public class EmployeeDetailsOptionHandler {
 	public static void handleEmployeeDetailsOptionSelection(StockManagementTableModel tableModel,UserLoginDetails userLoginDetails) {
 		tableModel.refreshTableData(EmployeeRecord.getTableModel(
 				EmployeeRecordsRepository.getEmployeeRecordByUsername(userLoginDetails.getUsername())), 
+				EmployeeRecord.attributeColumnNames);
+	}
+
+	public static void handleEmployeeDetailsOptionSelectionForAdmin(
+			StockManagementTableModel tableModel) {
+		tableModel.refreshTableData(EmployeeRecord.getTableModel(
+				EmployeeRecordsRepository.getAllEmployeeRecords()), 
 				EmployeeRecord.tableColumnNames);
 	}
 }
