@@ -61,10 +61,10 @@ public class RecordKeeping {
 	}
 	
 	public static String[][] getTableModel(List<RecordKeeping> recordKeepings) {
-		List<String[]> tableModel = new ArrayList<>();
+		List<String[]> tableModel = new ArrayList<String[]>();
 		for (RecordKeeping recordKeeping : recordKeepings) {
 			String tag = recordKeeping.getTag();
-			String[] record = new String[]{recordKeeping.getType(), recordKeeping.getComment(), (tag!=null && tag.contains("."))?tag.substring(0, tag.lastIndexOf(".")):""};
+			String[] record = new String[]{recordKeeping.getType(), recordKeeping.getComment(), (tag!=null && tag.contains("."))?"<html><a href='C:/GovLog_GovSrv.EXE.txt'><font color='blue'>"+tag.substring(0, tag.lastIndexOf("."))+"</font></a><html>":""};
 			tableModel.add(record);
 		}
 		 String[][] tableModelArray = new String[tableModel.size()][];
