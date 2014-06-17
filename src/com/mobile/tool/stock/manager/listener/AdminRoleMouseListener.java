@@ -1,14 +1,20 @@
 package com.mobile.tool.stock.manager.listener;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileFilter;
 import java.sql.Date;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
@@ -17,7 +23,6 @@ import net.sf.dynamicreports.report.exception.DRException;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.SqlDateModel;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import com.mobile.tool.stock.manager.entity.SalesRecord;
 import com.mobile.tool.stock.manager.entity.UserLoginDetails;
@@ -42,6 +47,7 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 	private JButton button;
 	private JDatePickerImpl fromDatePicker;
 	private JDatePickerImpl toDatePicker;
+	private JTable table;
 	
 	
 	public AdminRoleMouseListener() {
@@ -49,11 +55,12 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 
 	public AdminRoleMouseListener(JTree tree,
 			StockManagementTableModel tableModel,
-			UserLoginDetails userLoginDetails) {
+			UserLoginDetails userLoginDetails, JTable table) {
 		super();
 		this.tree = tree;
 		this.tableModel = tableModel;
 		this.userLoginDetails = userLoginDetails;
+		this.table = table;
 	}
 
 	public AdminRoleMouseListener addButtonPanel(JPanel btnPnl) {
@@ -79,9 +86,58 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 		} else if("Manage Records".equalsIgnoreCase(tp.getLastPathComponent()
 				.toString())){
 			if(!"Manage Records".equalsIgnoreCase(lastSelection)) {
-				RecordKeepingOptionHandler.handleRecordKeeping(	tableModel);
+				RecordKeepingOptionHandler.handleRecordKeeping(tableModel);
 				addButtonsInPanel("Add Records", new AddRecordKeepingListener(this));
 				this.lastSelection = "Manage Records";
+				table.addMouseListener(new MouseListener() {
+					
+					@Override
+					public void mouseReleased(MouseEvent e) {
+					}
+					
+					@Override
+					public void mousePressed(MouseEvent e) {
+					}
+					
+					@Override
+					public void mouseExited(MouseEvent e) {
+					}
+					
+					@Override
+					public void mouseEntered(MouseEvent e) {
+					}
+					
+					@Override
+					public void mouseClicked(MouseEvent e) {
+					    int row = table.rowAtPoint(new Point(e.getX(), e.getY()));
+			            int col = table.columnAtPoint(new Point(e.getX(), e.getY()));
+			            if(col == 2){
+				            String url = (String) table.getModel().getValueAt(row, col);
+				            url = url.substring(url.indexOf("<a href='")+9);
+				            url = url.substring(0, url.indexOf("'>"));
+				            System.out.println(url + " was clicked");
+				            JFileChooser chooser = new JFileChooser();
+				            // Note: source for ExampleFileFilter can be found in FileChooserDemo,
+				            // under the demo/jfc directory in the Java 2 SDK, Standard Edition.
+
+				            String selectedFile = "The suggested save name.";
+				            chooser.setSelectedFile(new File(url));
+
+				            FileFilter filter = new DeFF();
+				            String extension = "Do something to find your extension";
+				            filter.addExtension(extension);
+				            filter.setDescription("JPG & GIF Images");
+				            chooser.setFileFilter(filter);
+				            int returnVal = chooser.showSaveDialog(parent);
+				            if(returnVal == JFileChooser.APPROVE_OPTION) {
+				               System.out.println("You chose to open this file: " +
+				                    chooser.getSelectedFile().getName());
+				               //then write your code to write to disk
+				            }
+			            }
+						
+					}
+				});
 			} 
 		} else if("Customer List".equalsIgnoreCase(tp.getLastPathComponent()
 				.toString())){
