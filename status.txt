@@ -6,7 +6,7 @@ S. No.	Fuctionality	IsCodeDone	Comment	Status
 5	Taking of records of payment channel or mode	Y		Done
 6	Taking records of income and expenditure of all the transactions made 	N	What is expenditure???	Required Clarification
 7	Automatic updates after recording any transaction made either addition, subtraction and multiplication.	Y		Done
-8	Weekly or monthly Time sheet and account reconciliation and Report taken 	N	What is timesheet???	Required Clarification
+8	Weekly or monthly Time sheet and account reconciliation and Report taken 	Y		Done
 9	Employees details, payroll, Sales Representatives details	Y		Done
 10	Creating users account for different users or administrators/Manager and Log in details and Register.Also, assigning privileges to different users in-terms of update,creating,deleting etc.	Y		Done
 11	Printing of invoices after each transaction.	Y		Done
@@ -18,4 +18,4 @@ S. No.	Fuctionality	IsCodeDone	Comment	Status
 17	Specifying the employee and customer that made the transaction.	Y		Done
 18	Sending sms to customers or clients on any transaction made either credit or debit		Not Required	Not Required
 19	Taking records of customer that are owing or Debitors.	N	Debitor???	Required Clarification
-20	Space to add comments and office reports and letters.	N	User Interface still to build	WIP
+20	Space to add comments and office reports and letters.	Y		Done
