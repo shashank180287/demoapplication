@@ -19,7 +19,7 @@ public class StockManagementTableModel extends DefaultTableModel {
 
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		if(row == editableRowNo && (skipColumns==null || !skipColumns.contains(column)))
+		if((editableRowNo!=null && row == editableRowNo) && (skipColumns==null || !skipColumns.contains(column)))
 			return true;
 		return false;
 	}

@@ -13,6 +13,20 @@ public class ProductRecordRepository {
 
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
 	
+	public static void addProductRecord(ProductRecord productRecord) {
+		String query = "INSERT INTO PRODUCT_RECORD VALUES ('"+(productRecord.getName().toUpperCase().substring(0, 3)+getRandomNo())+"',"
+				+productRecord.getProductcategory().getCategoryId()+",'"
+				+productRecord.getName()+"','"
+				+productRecord.getDesc()+"',"
+				+productRecord.getUnitPrice()+","
+				+productRecord.getBulkPrice()+","
+				+productRecord.getOrderCount()+",'"
+				+productRecord.getVendor().getVendorCode()+"','"
+				+productRecord.getCreated()+"')";
+		jdbcTemplate.executeUpdate(query);
+		
+	}
+	
 	public static ProductRecord getProductRecordByCode(String productCode) {
 		List<ProductRecord> productRecords = getProductRecordByQuery("SELECT * FROM PRODUCT_RECORD WHERE product_code='"+productCode+"'");
 		return productRecords.size()>0?productRecords.get(0):null;
@@ -47,5 +61,9 @@ public class ProductRecordRepository {
 				}
 		}
 		return productRecords;
+	}
+
+	private static int getRandomNo() {
+		return (int) (Math.random()*1000);
 	}
 }

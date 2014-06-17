@@ -1,5 +1,6 @@
 package com.mobile.tool.stock.manager.repository;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -157,15 +158,10 @@ public class SaleRecordsRepository {
 		salesRecord.toArray(sales);
 		return sales;
 	}
-
+	
 	public static List<SalesRecord> getSaleRecordsForDatePeriod(Date fromDate, Date toDate) {
-		List<SalesRecord> salesRecords = new ArrayList<SalesRecord>();
-		salesRecords.add(new SalesRecord("1", new ProductRecord(null, null, "P1", null, 0.0, 0.0, 0, null, new Date(System.currentTimeMillis())), 10, null, null, 1200.0F, 1500.00F, null, 
-				new CustomerRecord(null, "ABC", "DFC", 0, null, null, null, new Date(System.currentTimeMillis()), null, null, null), null, null, new Date(System.currentTimeMillis())));
-		salesRecords.add(new SalesRecord("2", new ProductRecord(null, null, "P2", null, 0.0, 0.0, 0, null, new Date(System.currentTimeMillis())), 50, null, null, 2500.0F, 2400.00F, null, 
-				new CustomerRecord(null, "XYZ", "LLL", 0, null, null, null, new Date(System.currentTimeMillis()), null, null, null), null, null, new Date(System.currentTimeMillis()-100000)));
-		return salesRecords;	
-/*		return getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE created BETWEEN '"+new SimpleDateFormat("yyyy-MM-dd").format(fromDate)+"' AND '"+
-					new SimpleDateFormat("yyyy-MM-dd").format(toDate)+"' ORDER BY created");*/
+		return getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE created BETWEEN '"+new SimpleDateFormat("yyyy-MM-dd").format(fromDate)+"' AND '"+
+					new SimpleDateFormat("yyyy-MM-dd").format(toDate)+"' ORDER BY created");
 	}
+
 }

@@ -13,6 +13,21 @@ public class VendorRecordRepository {
 
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
 	
+	public static void addVendorRecord(VendorRecord vendorRecord) {
+		String query = "INSERT INTO VENDOR_RECORD VALUES ('"+(vendorRecord.getName().toUpperCase().substring(0, 3)+getRandomNo())+"',"
+								+vendorRecord.getVendorCategory().getVendorCategoryId()+",'"
+								+vendorRecord.getName()+"',"
+								+vendorRecord.getMobilenumber()+",'"
+								+vendorRecord.getEmail()+"','"
+								+vendorRecord.getTitle()+"','"
+								+vendorRecord.getContactAddress()+"','"
+								+vendorRecord.getPermanentAddress()+"','"
+								+vendorRecord.getWebsite()+"','"
+								+vendorRecord.getDescription()+"',"
+								+(vendorRecord.getUserLoginDetails()!=null?"'"+vendorRecord.getUserLoginDetails().getUsername()+"'":"NULL")+")";
+		jdbcTemplate.executeUpdate(query);
+	}
+	
 	public static List<VendorRecord> getVendorRecordByQuery(String query) {
 		List<VendorRecord> vendorRecords = new ArrayList<>();
 		ResultSet vendorRecordInDb = null;
@@ -52,5 +67,9 @@ public class VendorRecordRepository {
 	public static List<VendorRecord> getAllVendorRecords() {
 		String query = "SELECT * FROM VENDOR_RECORD ORDER BY vendor_code";
 		return getVendorRecordByQuery(query);
+	}
+	
+	private static int getRandomNo() {
+		return (int) (Math.random()*1000);
 	}
 }

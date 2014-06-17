@@ -76,13 +76,13 @@ public class StockDashboardTab {
         JDesktopPane desktop = new JDesktopPane();
         JInternalFrame frame;
 
-        frame = new JInternalFrame("Product Detasils", true, false, true, true);
+        frame = new JInternalFrame("Product Details", true, false, true, true);
         frame.setContentPane(buildFrame2ContentPane(buildProductListTable()));
         frame.setBounds(originX1, 10, extentX1, 320);
         desktop.add(frame);
         frame.setVisible(true);
 
-        frame = new JInternalFrame("Customer Detasils", true, false, true, true);
+        frame = new JInternalFrame("Customer Details", true, false, true, true);
         frame.setContentPane(buildFrame2ContentPane(buildCustomerListTable()));
         frame.setBounds(originX2, 10, extentX2, 320);
         desktop.add(frame);

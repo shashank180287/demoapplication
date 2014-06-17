@@ -76,7 +76,7 @@ public class StockManagementTab {
 	private UserLoginDetails userLoginDetails;
 	private JPanel btnPnl;
 	private TreePath selectionPath;
-	private JTable table;
+	private 	JTable table;
 	/**
 	 * Builds and returns the panel.
 	 */

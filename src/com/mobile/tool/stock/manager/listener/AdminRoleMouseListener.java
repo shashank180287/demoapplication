@@ -7,7 +7,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Date;
 import java.util.List;
 
@@ -81,6 +82,10 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 					btnPnl.revalidate();
 					btnPnl.repaint();
 				}
+				if(fromDatePicker!=null || toDatePicker!=null){
+					btnPnl.remove(fromDatePicker);
+					btnPnl.remove(toDatePicker);
+				}
 				this.lastSelection = "Sales History";
 			}
 		} else if("Manage Records".equalsIgnoreCase(tp.getLastPathComponent()
@@ -115,25 +120,17 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 				            String url = (String) table.getModel().getValueAt(row, col);
 				            url = url.substring(url.indexOf("<a href='")+9);
 				            url = url.substring(0, url.indexOf("'>"));
-				            System.out.println(url + " was clicked");
 				            JFileChooser chooser = new JFileChooser();
-				            // Note: source for ExampleFileFilter can be found in FileChooserDemo,
-				            // under the demo/jfc directory in the Java 2 SDK, Standard Edition.
-
-				            String selectedFile = "The suggested save name.";
-				            chooser.setSelectedFile(new File(url));
-
-				            FileFilter filter = new DeFF();
-				            String extension = "Do something to find your extension";
-				            filter.addExtension(extension);
-				            filter.setDescription("JPG & GIF Images");
-				            chooser.setFileFilter(filter);
-				            int returnVal = chooser.showSaveDialog(parent);
-				            if(returnVal == JFileChooser.APPROVE_OPTION) {
-				               System.out.println("You chose to open this file: " +
-				                    chooser.getSelectedFile().getName());
-				               //then write your code to write to disk
+				            if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(null)) {
+				            	File destinationFile = chooser.getSelectedFile();
+								try {
+									Files.copy(new File(url).toPath(),
+											destinationFile.toPath());
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
 				            }
+
 			            }
 						
 					}
@@ -160,7 +157,7 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 			if(!"Vendor List".equalsIgnoreCase(lastSelection)) {
 				VendorDetailsOptionHandler.handleVendorDetailsOptionSelectionForAdmin(
 						tableModel);
-				addButtonsInPanel("New Vendor", new AddCustomerRecordListener(this));
+				addButtonsInPanel("New Vendor", new AddNewVendorRecordListener(this));
 				this.lastSelection = "Vendor List";
 			} 
 		}else if("Product Order".equalsIgnoreCase(tp.getLastPathComponent()
@@ -168,7 +165,7 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 			if(!"Product Order".equalsIgnoreCase(lastSelection)) {
 				ProductDetailsOptionHandler.handleProductDetailsOptionSelectionForAdmin(
 						tableModel);
-				addButtonsInPanel("Add Product", new AddCustomerRecordListener(this));
+				addButtonsInPanel("Add Product", new AddNewProductRecordListener(this));
 				this.lastSelection = "Product Order";
 			} 
 		}else if("Sales Reports".equalsIgnoreCase(tp.getLastPathComponent()
@@ -232,11 +229,20 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 			button.addActionListener(actionListener);
 			btnPnl.add(button);
 			btnPnl.revalidate();
+			btnPnl.repaint();
 		}
 	}
 
 	public void reloadRecordKeepingTableData() {
 		RecordKeepingOptionHandler.handleRecordKeeping(tableModel);
+	}
+
+	public void reloadVendorTableData() {
+		VendorDetailsOptionHandler.handleVendorDetailsOptionSelectionForAdmin(tableModel);
+	}
+
+	public void reloadProductTableData() {
+		ProductDetailsOptionHandler.handleProductDetailsOptionSelectionForAdmin(tableModel);
 	}
 	
 }
