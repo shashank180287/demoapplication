@@ -76,6 +76,7 @@ public class StockManagementTab {
 	private UserLoginDetails userLoginDetails;
 	private JPanel btnPnl;
 	private TreePath selectionPath;
+	private JTable table;
 	/**
 	 * Builds and returns the panel.
 	 */
@@ -114,7 +115,7 @@ public class StockManagementTab {
 
 		switch (userRoleDefine) {
 		case ADMIN:
-			tree.addMouseListener(new AdminRoleMouseListener(tree, (StockManagementTableModel) tableModel, userLoginDetails).addButtonPanel(btnPnl));
+			tree.addMouseListener(new AdminRoleMouseListener(tree, (StockManagementTableModel) tableModel, userLoginDetails, table).addButtonPanel(btnPnl));
 			break;
 		case CUSTOMER:
 			tree.addMouseListener(new CustomerRoleMouseListener(tree,
@@ -155,7 +156,6 @@ public class StockManagementTab {
 	 * Builds and returns a sample table.
 	 */
 	private JTable buildTable() {
-		JTable table = null;
 		switch (userRoleDefine) {
 		case EMPLOYEE:
 			tableModel = new StockManagementTableModel(EmployeeRecord.getTableModel(
@@ -205,6 +205,7 @@ public class StockManagementTab {
 			root.add(parent);
 			MutableTreeNode salesHistory =new DefaultMutableTreeNode("Sales History");
 			parent.add(salesHistory);
+			parent.add(new DefaultMutableTreeNode("Sales Reports"));
 			//
 			parent = new DefaultMutableTreeNode("Manage");
 			root.add(parent);
