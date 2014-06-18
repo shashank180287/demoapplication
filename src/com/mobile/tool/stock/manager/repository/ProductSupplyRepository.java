@@ -3,7 +3,9 @@ package com.mobile.tool.stock.manager.repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mobile.tool.stock.manager.entity.ProductRecord;
 import com.mobile.tool.stock.manager.entity.ProductSupply;
@@ -71,5 +73,27 @@ public class ProductSupplyRepository {
 	public static ProductSupply getProductSupplyByProductCode(String productCode) {
 		List<ProductSupply> productSupplyList = getProductSupplyByQuery("SELECT * FROM PRODUCT_SUPPLY WHERE product_code='"+productCode+"'");
 		return productSupplyList.size()>0?productSupplyList.get(0):null;
+	}
+	
+	public static Map<String, Double> getProductLiabilities() {
+		Map<String, Double> liabilities = new HashMap<>();
+		ResultSet productSupplyInDb = null;
+		try{
+			productSupplyInDb = jdbcTemplate.executeQuery("Select ps.product_code, sum(pr.bulk_price*ps.total_items) from product_supply ps,"+
+									"product_record pr where pr.product_code=ps.product_code group by ps.product_code");
+			while(productSupplyInDb.next()){
+				liabilities.put(productSupplyInDb.getString("product_code"), productSupplyInDb.getDouble("sum"));
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			if(productSupplyInDb!=null)
+				try {
+					productSupplyInDb.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		return liabilities;
 	}
 }

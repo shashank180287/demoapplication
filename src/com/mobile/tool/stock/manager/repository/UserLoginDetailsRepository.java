@@ -13,7 +13,7 @@ public class UserLoginDetailsRepository {
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
 	
 	public static void addUserLoginDetails(UserLoginDetails userLoginDetails) {
-		String query = "INSERT INTO USER_LOGIN_DETAILS VALUES ('"+userLoginDetails.getUsername()+",'"+userLoginDetails.getPassword()+"','"+userLoginDetails.getUserRole().getRoleId()+"')";
+		String query = "INSERT INTO USER_LOGIN_DETAILS VALUES ('"+userLoginDetails.getUsername()+"','"+userLoginDetails.getPassword()+"',"+userLoginDetails.getUserRole().getRoleId()+")";
 		jdbcTemplate.executeUpdate(query);
 	}
 

@@ -26,24 +26,25 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.SqlDateModel;
 
 import com.mobile.tool.stock.manager.entity.SalesRecord;
-import com.mobile.tool.stock.manager.entity.UserLoginDetails;
 import com.mobile.tool.stock.manager.handler.CustomerDetailsOptionHandler;
 import com.mobile.tool.stock.manager.handler.EmployeeDetailsOptionHandler;
 import com.mobile.tool.stock.manager.handler.ProductDetailsOptionHandler;
+import com.mobile.tool.stock.manager.handler.ProductOrdersOptionHandler;
 import com.mobile.tool.stock.manager.handler.RecordKeepingOptionHandler;
 import com.mobile.tool.stock.manager.handler.SalesHistoryOptionHandler;
 import com.mobile.tool.stock.manager.handler.UserLoginDetailsOptionHandler;
 import com.mobile.tool.stock.manager.handler.VendorDetailsOptionHandler;
+import com.mobile.tool.stock.manager.model.AssetsReportData;
 import com.mobile.tool.stock.manager.model.SalesReportData;
 import com.mobile.tool.stock.manager.model.StockManagementTableModel;
 import com.mobile.tool.stock.manager.report.DynamicReportDesign;
+import com.mobile.tool.stock.manager.repository.ProductSupplyRepository;
 import com.mobile.tool.stock.manager.repository.SaleRecordsRepository;
 
 public class AdminRoleMouseListener  extends MouseAdapter {
 
 	private JTree tree;
 	private StockManagementTableModel tableModel;
-	private UserLoginDetails userLoginDetails;
 	private String lastSelection;
 	private JPanel btnPnl;
 	private JButton button;
@@ -57,11 +58,10 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 
 	public AdminRoleMouseListener(JTree tree,
 			StockManagementTableModel tableModel,
-			UserLoginDetails userLoginDetails, JTable table) {
+			JTable table) {
 		super();
 		this.tree = tree;
 		this.tableModel = tableModel;
-		this.userLoginDetails = userLoginDetails;
 		this.table = table;
 	}
 
@@ -170,12 +170,20 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 				addButtonsInPanel("New Vendor", new AddNewVendorRecordListener(this));
 				this.lastSelection = "Vendor List";
 			} 
-		}else if("Product Order".equalsIgnoreCase(tp.getLastPathComponent()
+		}else if("Product List".equalsIgnoreCase(tp.getLastPathComponent()
 				.toString())){
-			if(!"Product Order".equalsIgnoreCase(lastSelection)) {
+			if(!"Product List".equalsIgnoreCase(lastSelection)) {
 				ProductDetailsOptionHandler.handleProductDetailsOptionSelectionForAdmin(
 						tableModel);
 				addButtonsInPanel("Add Product", new AddNewProductRecordListener(this));
+				this.lastSelection = "Product List";
+			} 
+		}else if("Product Order".equalsIgnoreCase(tp.getLastPathComponent()
+				.toString())){
+			if(!"Product Order".equalsIgnoreCase(lastSelection)) {
+				ProductOrdersOptionHandler.handleProductSupplyOptionSelectionForAdmin(
+						tableModel);
+				addButtonsInPanel("Add Supply", new AddNewProductSupplyListener(this));
 				this.lastSelection = "Product Order";
 			} 
 		}else if("Sales Reports".equalsIgnoreCase(tp.getLastPathComponent()
@@ -217,6 +225,38 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 				}
 				this.lastSelection = "Sales Reports";
 			} 
+		}else if("Account Sheet".equalsIgnoreCase(tp.getLastPathComponent()
+				.toString())){
+			if(!"Account Sheet".equalsIgnoreCase(lastSelection)) {
+				tableModel.refreshTableData(new String[][]{}, new String[]{});
+				if (btnPnl != null) {
+					if(button!=null){
+						btnPnl.remove(button);
+					}
+					if(fromDatePicker!=null || toDatePicker!=null){
+						btnPnl.remove(fromDatePicker);
+						btnPnl.remove(toDatePicker);
+					}
+					button = (new JButton("Get Report"));
+					button.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								DynamicReportDesign design = new DynamicReportDesign(new AssetsReportData(ProductSupplyRepository.getProductLiabilities(), SaleRecordsRepository.getProductEquity()));
+								JasperReportBuilder report = design.build();
+								report.show();
+							} catch (DRException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					btnPnl.add(button);
+					btnPnl.revalidate();
+					btnPnl.repaint();
+				}
+				this.lastSelection = "Account Sheet";
+			} 
 		}
 
 	}
@@ -256,8 +296,15 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 	}
 
 	public void reloadEmployeeTableData() {
-		EmployeeDetailsOptionHandler.handleEmployeeDetailsOptionSelectionForAdmin(
-				tableModel);
+		EmployeeDetailsOptionHandler.handleEmployeeDetailsOptionSelectionForAdmin(tableModel);
+	}
+
+	public void reloadUserDetailsData() {
+		UserLoginDetailsOptionHandler.handleUserLoginDetailsOptionSelectionForAdmin(tableModel);
+	}
+
+	public void reloadProductSupplyData() {
+		ProductOrdersOptionHandler.handleProductSupplyOptionSelectionForAdmin(tableModel);
 	}
 	
 }

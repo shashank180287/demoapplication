@@ -115,7 +115,7 @@ public class StockManagementTab {
 
 		switch (userRoleDefine) {
 		case ADMIN:
-			tree.addMouseListener(new AdminRoleMouseListener(tree, (StockManagementTableModel) tableModel, userLoginDetails, table).addButtonPanel(btnPnl));
+			tree.addMouseListener(new AdminRoleMouseListener(tree, (StockManagementTableModel) tableModel, table).addButtonPanel(btnPnl));
 			break;
 		case CUSTOMER:
 			tree.addMouseListener(new CustomerRoleMouseListener(tree,
@@ -199,6 +199,7 @@ public class StockManagementTab {
 			parent.add(new DefaultMutableTreeNode("Customer List"));
 			parent.add(new DefaultMutableTreeNode("Employee List"));
 			parent.add(new DefaultMutableTreeNode("Vendor List"));
+			parent.add(new DefaultMutableTreeNode("Product List"));
 			parent.add(new DefaultMutableTreeNode("Product Order"));
 			//
 			parent = new DefaultMutableTreeNode("Transaction");
@@ -206,6 +207,7 @@ public class StockManagementTab {
 			MutableTreeNode salesHistory =new DefaultMutableTreeNode("Sales History");
 			parent.add(salesHistory);
 			parent.add(new DefaultMutableTreeNode("Sales Reports"));
+			parent.add(new DefaultMutableTreeNode("Account Sheet"));
 			//
 			parent = new DefaultMutableTreeNode("Manage");
 			root.add(parent);

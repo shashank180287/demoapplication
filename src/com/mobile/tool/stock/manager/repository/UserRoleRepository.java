@@ -47,4 +47,15 @@ public class UserRoleRepository {
 		}
 		return null;
 	}
+	
+	public static UserRole getUserRolesByRoleName(String roleName) {
+		if(userRoles==null)
+			getUserRoles();
+		
+		for (UserRole userRole : userRoles) {
+			if(userRole.getRoleName().equalsIgnoreCase(roleName))
+				return userRole;
+		}
+		return null;
+	}
 }

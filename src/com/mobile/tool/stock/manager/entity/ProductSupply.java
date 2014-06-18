@@ -1,5 +1,8 @@
 package com.mobile.tool.stock.manager.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProductSupply {
 
 	private String supplyCode;
@@ -8,7 +11,8 @@ public class ProductSupply {
 	private int totalSupplied;
 	private int currentStock;
 	private int currentItemCount;
-
+	public static String[] tableColumnNames = new String[]{"Supply Code", "Product", "Total Items", "Current Stock", "Current Items"};
+	
 	public ProductSupply() {
 	}
 
@@ -80,4 +84,15 @@ public class ProductSupply {
 				+ ", currentItemCount=" + currentItemCount + "]";
 	}
 	
+	public static String[][] getTableModel(List<ProductSupply> productSupplies) {
+		List<String[]> tableModel = new ArrayList<>();
+		for (ProductSupply productSupply : productSupplies) {
+			String[] supply = new String[]{productSupply.getSupplyCode(), productSupply.getProduct().getName(), 
+					productSupply.getTotalItems()+"", productSupply.getCurrentStock()+"", productSupply.getCurrentItemCount()+""};
+			tableModel.add(supply);
+		}
+		String[][] tableModelArray = new String[tableModel.size()][];
+		tableModel.toArray(tableModelArray);
+		return tableModelArray;
+	}
 }

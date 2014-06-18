@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mobile.tool.stock.manager.entity.CustomerRecord;
 import com.mobile.tool.stock.manager.entity.EmployeeRecord;
@@ -162,6 +164,28 @@ public class SaleRecordsRepository {
 	public static List<SalesRecord> getSaleRecordsForDatePeriod(Date fromDate, Date toDate) {
 		return getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE created BETWEEN '"+new SimpleDateFormat("yyyy-MM-dd").format(fromDate)+"' AND '"+
 					new SimpleDateFormat("yyyy-MM-dd").format(toDate)+"' ORDER BY created");
+	}
+	
+	public static Map<String, Double> getProductEquity() {
+		Map<String, Double> equities = new HashMap<>();
+		ResultSet productSupplyInDb = null;
+		try{
+			productSupplyInDb = jdbcTemplate.executeQuery("select product_code, sum(confirm_amount) from sales_records group"+
+					" by product_code");
+			while(productSupplyInDb.next()){
+				equities.put(productSupplyInDb.getString("product_code"), productSupplyInDb.getDouble("sum"));
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			if(productSupplyInDb!=null)
+				try {
+					productSupplyInDb.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		return equities;
 	}
 
 }

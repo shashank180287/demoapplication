@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.mobile.tool.stock.manager.entity.VendorRecord;
-import com.mobile.tool.stock.manager.repository.VendorRecordRepository;
+import com.mobile.tool.stock.manager.entity.CustomerRecord;
+import com.mobile.tool.stock.manager.entity.EmployeeRecord;
+import com.mobile.tool.stock.manager.repository.CustomerRecordsRepository;
+import com.mobile.tool.stock.manager.repository.EmployeeRecordsRepository;
 
 public class SearchUserButtonListener extends JFrame implements
 		ActionListener {
@@ -27,6 +31,7 @@ public class SearchUserButtonListener extends JFrame implements
 	DefaultTableModel model;
 	JTable userTable;
 	String searchUserColumns[] = {"User Code", "Name", "Mobile Number", "Email"};
+	static boolean oneWindowOpen=false;
 	
 	private final AddNewUserLoginDetailsListener listener;
 	private String userType;
@@ -37,46 +42,100 @@ public class SearchUserButtonListener extends JFrame implements
 	}
 	
 	public void createAndShowGUI() {
-		
-		vendorRecords = VendorRecordRepository.getAllVendorRecords();
-		model = new DefaultTableModel(getTableModelArray(vendorRecords), searchUserColumns);
-		userTable = new JTable(model) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean isCellEditable(int arg0, int arg1) {
-				return false;
+		if(!oneWindowOpen){
+			if("Customer".equalsIgnoreCase(userType)){
+				final List<CustomerRecord> customerRecords = CustomerRecordsRepository.getAllCustomerRecords();
+				model = new DefaultTableModel( getTableModelArrayForCustomer(customerRecords), searchUserColumns);
+				userTable = new JTable(model) {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+	
+					@Override
+					public boolean isCellEditable(int arg0, int arg1) {
+						return false;
+					}
+				};
+				userTable.addMouseListener(new MouseAdapter() {
+				    public void mousePressed(MouseEvent me) {
+				        JTable table =(JTable) me.getSource();
+				        Point p = me.getPoint();
+				        int row = table.rowAtPoint(p);
+				        if (me.getClickCount() == 2 && customerRecords!=null && customerRecords.size()>=row) {
+				            listener.setUserCodeText(customerRecords.get(row).getCustomerCode());
+				            oneWindowOpen =false;
+				            closeWindow();
+				        }
+				    }
+				});
+			}else{
+				final List<EmployeeRecord> employeeRecords = EmployeeRecordsRepository.getAllEmployeeRecords();
+				model = new DefaultTableModel(getTableModelArrayForEmployee(employeeRecords), searchUserColumns);
+				userTable = new JTable(model) {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+	
+					@Override
+					public boolean isCellEditable(int arg0, int arg1) {
+						return false;
+					}
+				};
+				userTable.addMouseListener(new MouseAdapter() {
+				    public void mousePressed(MouseEvent me) {
+				        JTable table =(JTable) me.getSource();
+				        Point p = me.getPoint();
+				        int row = table.rowAtPoint(p);
+				        if (me.getClickCount() == 2 && employeeRecords!=null && employeeRecords.size()>=row) {
+				            listener.setUserCodeText(employeeRecords.get(row).getEmployeeCode());
+				            oneWindowOpen = false;
+				            closeWindow();
+				        }
+				    }
+				});
 			}
+			oneWindowOpen = true;
+			JScrollPane pane = new JScrollPane(userTable);
+			add(pane);
+			setVisible(true);
+			setSize(500, 400);
+			setLayout(new FlowLayout());
+		}
+		
+		WindowAdapter adapter = new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				oneWindowOpen = false;
+			}
+			
 		};
-		userTable.addMouseListener(new MouseAdapter() {
-		    public void mousePressed(MouseEvent me) {
-		        JTable table =(JTable) me.getSource();
-		        Point p = me.getPoint();
-		        int row = table.rowAtPoint(p);
-		        if (me.getClickCount() == 2 && vendorRecords!=null && vendorRecords.size()>=row) {
-		            listener.setVendorText(vendorRecords.get(row).getVendorCode());
-		            closeWindow();
-		        }
-		    }
-		});
-		JScrollPane pane = new JScrollPane(userTable);
-		add(pane);
-		setVisible(true);
-		setSize(500, 400);
-		setLayout(new FlowLayout());
+		addWindowListener(adapter);
 	}
 
-	private String[][] getTableModelArray(List<VendorRecord> vendorRecords) {
-		List<String[]> vendors = new ArrayList<String[]>();
-		for (VendorRecord vendorRecord : vendorRecords) {
-			vendors.add(new String[]{vendorRecord.getVendorCode(), vendorRecord.getName(), vendorRecord.getMobilenumber()+"", vendorRecord.getEmail()});
+	
+	private String[][] getTableModelArrayForCustomer(List<CustomerRecord> allProductRecords) {
+		List<String[]> customers = new ArrayList<>();
+		for (CustomerRecord customerRecord : allProductRecords) {
+			customers.add(new String[]{customerRecord.getCustomerCode(), customerRecord.getFirstName()+" "+customerRecord.getLastName(),
+					customerRecord.getMobileNumber()+"", customerRecord.getEmail()});
 		}
-		String[][] vendorsArray = new String[vendors.size()][];
-		vendors.toArray(vendorsArray);
-		return vendorsArray;
+		String[][] customersArray = new String[customers.size()][];
+		customers.toArray(customersArray);
+		return customersArray;
+	}
+	
+	private String[][] getTableModelArrayForEmployee(List<EmployeeRecord> employeeRecords) {
+		List<String[]> employees = new ArrayList<String[]>();
+		for (EmployeeRecord employeeRecord : employeeRecords) {
+			employees.add(new String[]{employeeRecord.getEmployeeCode(), employeeRecord.getFirstname()+" "+employeeRecord.getLastname(), employeeRecord.getMobilenumber()+"", employeeRecord.getEmail()});
+		}
+		String[][] employeesArray = new String[employees.size()][];
+		employees.toArray(employeesArray);
+		return employeesArray;
 	}
 
 	@Override

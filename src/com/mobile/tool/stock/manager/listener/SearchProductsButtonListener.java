@@ -29,12 +29,18 @@ public class SearchProductsButtonListener extends JFrame implements
 	String searchProductColumns[] = { "Product Code", "Name", "Vendor" };
 	private List<ProductRecord> productRecords;
 	
-	private final AddingNewSalesRecordListener listener;
+	private final AddingNewSalesRecordListener listener1;
+	private final AddNewProductSupplyListener listener2;
 	
 	public SearchProductsButtonListener(AddingNewSalesRecordListener listener) {
-		this.listener = listener;
+		this.listener1 = listener;
+		this.listener2 =null;
 	}
 	
+	public SearchProductsButtonListener(AddNewProductSupplyListener listener) {
+		this.listener2 = listener;
+		this.listener1 = null;
+	}
 	public void createAndShowGUI() {
 		productRecords = ProductRecordRepository.getAllProductRecords();
 		model = new DefaultTableModel( getTableModelArray(productRecords), searchProductColumns);
@@ -55,7 +61,11 @@ public class SearchProductsButtonListener extends JFrame implements
 		        Point p = me.getPoint();
 		        int row = table.rowAtPoint(p);
 		        if (me.getClickCount() == 2 && productRecords!=null && productRecords.size()>=row) {
-		            listener.setProductText(productRecords.get(row).getProductCode());
+		        	if(listener1!=null && listener2==null){
+		        		listener1.setProductText(productRecords.get(row).getProductCode());
+		        	}else if(listener2!=null && listener1==null){
+		        		listener2.setProductText(productRecords.get(row).getProductCode());
+		        	}
 		            closeWindow();
 		        }
 		    }

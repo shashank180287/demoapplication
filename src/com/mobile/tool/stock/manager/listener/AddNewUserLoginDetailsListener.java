@@ -15,6 +15,14 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.mobile.tool.stock.manager.entity.CustomerRecord;
+import com.mobile.tool.stock.manager.entity.EmployeeRecord;
+import com.mobile.tool.stock.manager.entity.UserLoginDetails;
+import com.mobile.tool.stock.manager.repository.CustomerRecordsRepository;
+import com.mobile.tool.stock.manager.repository.EmployeeRecordsRepository;
+import com.mobile.tool.stock.manager.repository.UserLoginDetailsRepository;
+import com.mobile.tool.stock.manager.repository.UserRoleRepository;
+
 public class AddNewUserLoginDetailsListener extends JFrame implements ActionListener {
 	/**
 	 * 
@@ -49,7 +57,7 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 		usernameLabel = new JLabel("Username:");
 		passwordLabel = new JLabel("Password:");
 		confirmPasswordLabel = new JLabel("Confirm Password:");
-		userTypeLabel = new JLabel("User Type:");
+		userTypeLabel = new JLabel("Role:");
 		userCodeLabel = new JLabel("User:");
 		
 		usernameText = new JTextField();
@@ -64,7 +72,11 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 					userCodeText.setEnabled(true);
 					searchUserButton.setEnabled(true);
 					searchUserButton.addActionListener(new SearchUserButtonListener( AddNewUserLoginDetailsListener.this, userTypeCombo.getSelectedItem().toString()));
+				}else{
+					userCodeText.setEnabled(false);
+					searchUserButton.setEnabled(false);
 				}
+				userCodeText.setText("");
 				createButton.setEnabled(true);
 				clearButton.setEnabled(true);
 			}
@@ -83,12 +95,22 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-/*				ProductRecord productRecord = new ProductRecord(null, ProductCategoryRepository.getProductCatagoryByCategoryName(userCodeText.getText()), 
-						usernameText.getText(), passwordText.getText(), Double.parseDouble(unitPriceText.getText()), Double.parseDouble(bulkPriceText.getText()), 
-						Integer.parseInt(orderCountText.getText()), VendorRecordRepository.getVendorRecordByCode(vendorText.getText()), new Date(System.currentTimeMillis()));
-				ProductRecordRepository.addProductRecord(productRecord);
-				listener.reloadProductTableData();
-				dispose();*/
+				String selectedRole = userTypeCombo.getSelectedItem().toString();
+				UserLoginDetails userLoginDetails = new UserLoginDetails(usernameText.getText(), passwordText.getText(), 
+						UserRoleRepository.getUserRolesByRoleName(selectedRole));
+				UserLoginDetailsRepository.addUserLoginDetails(userLoginDetails);
+				if("Customer".equalsIgnoreCase(selectedRole)){
+					CustomerRecord customerRecord = CustomerRecordsRepository.getCustomerRecordByCustomerCode(userCodeText.getText());
+					customerRecord.setUserLoginDetails(userLoginDetails);
+					CustomerRecordsRepository.updateCustomerUserLoginDetails(customerRecord);
+				}else if("Employee".equalsIgnoreCase(selectedRole)){
+					EmployeeRecord employeeRecord = EmployeeRecordsRepository.getEmployeeRecordByEmployeeCode(userCodeText.getText());
+					employeeRecord.setUserLoginDetail(userLoginDetails);
+					EmployeeRecordsRepository.updateEmployeeUserLoginDetails(employeeRecord);
+				}
+				
+				listener.reloadUserDetailsData();
+				dispose();
 			}
 		});
 		
@@ -152,7 +174,7 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 
 	}
 
-	public void setProductCategoryText(String categoryName) {
+	public void setUserCodeText(String categoryName) {
 		this.userCodeText.setText(categoryName);
 		this.revalidate();
 	}

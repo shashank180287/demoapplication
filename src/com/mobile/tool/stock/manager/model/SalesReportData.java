@@ -63,4 +63,5 @@ public class SalesReportData extends DynamicReportData{
 		c.set(Calendar.DAY_OF_MONTH, dateCal.get(Calendar.DAY_OF_MONTH));
 		return c.getTime();
 	}
+
 }
