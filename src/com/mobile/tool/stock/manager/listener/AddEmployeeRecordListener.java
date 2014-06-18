@@ -9,30 +9,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.mobile.tool.stock.manager.entity.CustomerRecord;
 import com.mobile.tool.stock.manager.entity.EmployeeRecord;
-import com.mobile.tool.stock.manager.entity.ProductRecord;
-import com.mobile.tool.stock.manager.entity.ProductSupply;
-import com.mobile.tool.stock.manager.entity.SalesRecord;
-import com.mobile.tool.stock.manager.entity.TransectionMode;
-import com.mobile.tool.stock.manager.entity.UserLoginDetails;
-import com.mobile.tool.stock.manager.report.InvoiceDesign;
-import com.mobile.tool.stock.manager.repository.CustomerRecordsRepository;
 import com.mobile.tool.stock.manager.repository.EmployeeRecordsRepository;
-import com.mobile.tool.stock.manager.repository.ProductRecordRepository;
-import com.mobile.tool.stock.manager.repository.ProductSupplyRepository;
-import com.mobile.tool.stock.manager.repository.SaleRecordsRepository;
-import com.mobile.tool.stock.manager.repository.TransectionModeRepository;
-import com.mobile.tool.stock.manager.utils.SendingMailsUtility;
 
 public class AddEmployeeRecordListener extends JFrame implements ActionListener {
 	/**
@@ -40,25 +26,22 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 	 */
 	private static final long serialVersionUID = 6191510576296067659L;
 
-	JLabel headline, firstNameLabel, mobileNumberLabel, saleTitleLabel, salesDescLabel, salesAmtLabel, confirmAmtLabel,  modeLabel, customerLabel, commentLabel;
-	JTextField productText, noOfItemsText, salesTitleText, salesDescText, salesAmtText, confirmAmtText, customerText, commentText;
-	JComboBox<String> modeComboBox;
-	JButton createButton, clearButton, searchProductButton, searchCustomerButton;
+	JLabel headline, firstNameLabel, mobileNumberLabel, lastNameLabel, genderLabel, qualificationLabel, professionLabel,  ageLabel, maritalStatusLabel, jobDescriptionLabel, emailLabel, jobTitleLabel, contactAddressLabel, managerLabel;
+	JTextField firstNameText, mobileNoText, lastNameText, qualificationText, professionText, ageText, jobDescriptionText, emailText, jobTitleText, managerText;
+	JTextArea contactAddressText;
+	JComboBox<String> genderComboBox, maritalComboBox;
+	JButton createButton, clearButton, searchManagerButton;
 	WindowAdapter adapter;
-	JFrame frame;
-	List<TransectionMode> transectionModes;
 	
-	private UserLoginDetails userLoginDetails;
-	private EmployeeRoleMouseListener listener;
+	private AdminRoleMouseListener listener;
 	
-	public AddEmployeeRecordListener(EmployeeRoleMouseListener listener, UserLoginDetails userLoginDetails) {
+	public AddEmployeeRecordListener(AdminRoleMouseListener listener) {
 		this.listener = listener;
-		this.userLoginDetails = userLoginDetails;
 	}
 	
 	public void createAndShowGUI() {
 		setVisible(true);
-		setSize(700, 600);
+		setSize(700, 800);
 		setLayout(null);
 		setTitle("Stock Management");
 
@@ -66,27 +49,35 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 		headline.setForeground(Color.blue);
 		headline.setFont(new Font("Serif", Font.BOLD, 20));
 
-		firstNameLabel = new JLabel("Product:");
-		mobileNumberLabel = new JLabel("Total Items:");
-		saleTitleLabel = new JLabel("Sales Title:");
-		salesDescLabel = new JLabel("Sales Description:");
-		salesAmtLabel = new JLabel("Sales Amount:");
-		confirmAmtLabel = new JLabel("Confirm Amount:");
-		modeLabel = new JLabel("Mode:");
-		customerLabel = new JLabel("Customer:");
-		commentLabel = new JLabel("Comment:");
-			
-		productText = new JTextField();
-		noOfItemsText = new JTextField();
-		transectionModes = TransectionModeRepository.getAllTransectionModes();
-		String[] petStrings = getTransectionModes(transectionModes);
-		modeComboBox = new JComboBox<String>(petStrings);
+		firstNameLabel = new JLabel("First Name:");
+		mobileNumberLabel = new JLabel("Mobile Number:");
+		lastNameLabel = new JLabel("Last Name:");
+		genderLabel = new JLabel("Gender:");
+		qualificationLabel = new JLabel("Qualification:");
+		professionLabel = new JLabel("Profession:");
+		ageLabel = new JLabel("Age:");
+		maritalStatusLabel = new JLabel("Marital Status:");
+		jobDescriptionLabel = new JLabel("Job Description:");
+		emailLabel = new JLabel("Email:");
+		jobTitleLabel = new JLabel("Job Title:");
+		contactAddressLabel = new JLabel("Contact Address:");
+		managerLabel = new JLabel("Manager:");
 		
-		customerText = new JTextField();
-		commentText = new JTextField();
-		salesTitleText = new JTextField();
-		salesDescText = new JTextField();
-		noOfItemsText.addKeyListener(new KeyAdapter() {
+		
+		firstNameText = new JTextField();
+		mobileNoText = new JTextField();
+		String[] genderOptions = new String[]{"Male", "Female"};
+		genderComboBox = new JComboBox<String>(genderOptions);
+		String[] maritalStatusOptions = new String[]{"Married", "Unmarried"};
+		maritalComboBox = new JComboBox<String>(maritalStatusOptions);
+		contactAddressText = new JTextArea();
+		jobDescriptionText = new JTextField();
+		emailText = new JTextField();
+		jobTitleText = new JTextField();
+		managerText = new JTextField();
+		lastNameText = new JTextField();
+		qualificationText = new JTextField();
+		mobileNoText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
 				if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
@@ -95,62 +86,35 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 				}
 			}
 		});
-		salesAmtText = new JTextField();
-		confirmAmtText = new JTextField();
-		salesAmtText.addKeyListener(new KeyAdapter() {
+		professionText = new JTextField();
+		ageText = new JTextField();
+		ageText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
-				if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)) || (c == KeyEvent.VK_PERIOD)) {
+				if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
 					getToolkit().beep();
 					e.consume();
 				}
 			}
 		});
-		confirmAmtText.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char c = e.getKeyChar();
-				if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)) || (c == KeyEvent.VK_PERIOD)) {
-					getToolkit().beep();
-					e.consume();
-				}
-			}
-		});
+		
 		createButton = new JButton("Create");
 		clearButton = new JButton("Clear");
-		searchProductButton = new JButton("..");
-	//	searchProductButton.addActionListener(new SearchProductsButtonListener(this));
-		searchCustomerButton = new JButton("..");
-//		searchCustomerButton.addActionListener(new SearchCustomerButtonListener(this));
+		searchManagerButton = new JButton("..");
+		searchManagerButton.addActionListener(new SearchEmployeerButtonListener(this));
 		
 		createButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ProductRecord product = ProductRecordRepository.getProductRecordByCode(productText.getText());
-				TransectionMode mode = getSelectedTransectionMode(modeComboBox.getSelectedItem().toString());
-				CustomerRecord customer = CustomerRecordsRepository.getCustomerRecordByCustomerCode(customerText.getText());
-				EmployeeRecord employee = EmployeeRecordsRepository.getEmployeeRecordByUsername(userLoginDetails.getUsername());
-				SalesRecord salesRecord = new SalesRecord(null, product, (noOfItemsText.getText()!=null? Integer.valueOf(noOfItemsText.getText()):0), 
-						salesTitleText.getText(), salesDescText.getText(),  (salesAmtText.getText()!=null?Float.valueOf(salesAmtText.getText()):0.0F), 
-						(confirmAmtText.getText()!=null? Float.valueOf(confirmAmtText.getText()):0.0F), mode , customer , employee , commentText.getText(), new Date(System.currentTimeMillis()));
-				SaleRecordsRepository.addSalesRecord(salesRecord);
-				ProductSupply productSupply = ProductSupplyRepository.getProductSupplyByProductCode(salesRecord.getProduct().getProductCode());
-				productSupply.setCurrentItemCount(productSupply.getCurrentItemCount()-salesRecord.getNoOfItems());
-				ProductSupplyRepository.updateProductSupply(productSupply);
-				
-				InvoiceDesign.printInvoiceBill(salesRecord);
-				SendingMailsUtility.sendMailUsingGmailSMTP(salesRecord.getCustomer().getEmail(), "D:\\demo.pdf");
-				SendingMailsUtility.sendMailUsingGmailSMTP(salesRecord.getEmployee().getEmail(), "D:\\demo.pdf");
-				listener.reloadTableData();
+				EmployeeRecord employeeRecord = new EmployeeRecord(null, firstNameText.getText(), lastNameText.getText(),
+						(mobileNoText.getText()!=null? Integer.valueOf(mobileNoText.getText()):0), genderComboBox.getSelectedItem().toString(),
+						qualificationText.getText(), professionText.getText(), (ageText.getText()!=null?Integer.valueOf(ageText.getText()):0), 
+						maritalComboBox.getSelectedItem().toString(), jobDescriptionText.getText(), EmployeeRecordsRepository.getEmployeeRecordByEmployeeCode(managerText.getText()), 
+						emailText.getText(), new Date(System.currentTimeMillis()), jobTitleText.getText(), contactAddressText.getText(), null, null, null, null);
+				EmployeeRecordsRepository.addNewEmployeeRecord(employeeRecord);
+				listener.reloadEmployeeTableData();
 				dispose();
-			}
-
-			private TransectionMode getSelectedTransectionMode(String selectedItem) {
-				for (TransectionMode transectionMode : transectionModes) {
-					if(transectionMode.getChannelName().equalsIgnoreCase(selectedItem))
-						return transectionMode;
-				}
-				return null;
 			}
 		});
 		
@@ -158,60 +122,75 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				productText.setText("");
-				noOfItemsText.setText("");
-				salesTitleText.setText("");
-				salesDescText.setText("");
-				salesAmtText.setText("");
-				confirmAmtText.setText("");
+				firstNameText.setText("");
+				mobileNoText.setText("");
+				lastNameText.setText("");
+				qualificationText.setText("");
+				professionText.setText("");
+				ageText.setText("");
 			}
 		});
 
 		headline.setBounds(80, 30, 400, 30);
 		firstNameLabel.setBounds(80, 70, 200, 30);
-		mobileNumberLabel.setBounds(80, 110, 200, 30);
-		saleTitleLabel.setBounds(80, 150, 200, 30);
-		salesDescLabel.setBounds(80, 190, 200, 30);
-		salesAmtLabel.setBounds(80, 230, 200, 30);
-		confirmAmtLabel.setBounds(80, 270, 200, 30);
-		modeLabel.setBounds(80, 310, 200, 30);
-		customerLabel.setBounds(80, 350, 200, 30);
-		commentLabel.setBounds(80, 390, 200, 30);
-		productText.setBounds(300, 70, 160, 30);
-		noOfItemsText.setBounds(300, 110, 200, 30);
-		salesTitleText.setBounds(300, 150, 200, 30);
-		salesDescText.setBounds(300, 190, 200, 30);
-		salesAmtText.setBounds(300, 230, 200, 30);
-		confirmAmtText.setBounds(300, 270, 200, 30);
-		modeComboBox.setBounds(300, 310, 200, 30);
-		customerText.setBounds(300, 350, 160, 30);
-		commentText.setBounds(300, 390, 200, 30);
-		searchProductButton.setBounds(470, 70, 30, 30);
-		searchCustomerButton.setBounds(470, 350, 30, 30);
-		createButton.setBounds(50, 440, 100, 30);
-		clearButton.setBounds(170, 440, 100, 30);
+		lastNameLabel.setBounds(80, 110, 200, 30);
+		mobileNumberLabel.setBounds(80, 150, 200, 30);
+		genderLabel.setBounds(80, 190, 200, 30);
+		qualificationLabel.setBounds(80, 230, 200, 30);
+		professionLabel.setBounds(80, 270, 200, 30);
+		ageLabel.setBounds(80, 310, 200, 30);
+		maritalStatusLabel.setBounds(80, 350, 200, 30);
+		jobDescriptionLabel.setBounds(80, 390, 200, 30);
+		emailLabel.setBounds(80, 430, 200, 30);
+		jobTitleLabel.setBounds(80, 470, 200, 30);
+		contactAddressLabel.setBounds(80, 510, 200, 30);
+		managerLabel.setBounds(80, 590, 200, 30);
+		
+		firstNameText.setBounds(300, 70, 200, 30);
+		lastNameText.setBounds(300, 110, 200, 30);
+		mobileNoText.setBounds(300, 150, 200, 30);
+		genderComboBox.setBounds(300, 190, 200, 30);
+		qualificationText.setBounds(300, 230, 200, 30);
+		professionText.setBounds(300, 270, 200, 30);
+		ageText.setBounds(300, 310, 200, 30);
+		maritalComboBox.setBounds(300, 350, 200, 30);
+		jobDescriptionText.setBounds(300, 390, 200, 30);
+		emailText.setBounds(300, 430, 200, 30);
+		jobTitleText.setBounds(300, 470, 200, 30);
+		contactAddressText.setBounds(300, 510, 200, 60);
+		managerText.setBounds(300, 590, 160, 30);
+		searchManagerButton.setBounds(470, 590, 30, 30);
+		createButton.setBounds(50, 630, 100, 30);
+		clearButton.setBounds(170, 630, 100, 30);
 
 		add(headline);
 		add(firstNameLabel);
-		add(productText);
-		add(searchProductButton);
+		add(firstNameText);
 		add(mobileNumberLabel);
-		add(noOfItemsText);
-		add(saleTitleLabel);
-		add(salesTitleText);
-		add(salesDescLabel);
-		add(salesDescText);
-		add(salesAmtLabel);
-		add(salesAmtText);
-		add(confirmAmtLabel);
-		add(confirmAmtText);
-		add(modeLabel);
-		add(modeComboBox);
-		add(customerLabel);
-		add(customerText);
-		add(searchCustomerButton);
-		add(commentLabel);
-		add(commentText);
+		add(mobileNoText);
+		add(lastNameLabel);
+		add(lastNameText);
+		add(genderLabel);
+		add(qualificationText);
+		add(qualificationLabel);
+		add(professionText);
+		add(professionLabel);
+		add(ageText);
+		add(ageLabel);
+		add(genderComboBox);
+		add(maritalStatusLabel);
+		add(jobDescriptionText);
+		add(jobDescriptionLabel);
+		add(emailText);
+		add(jobTitleLabel); 
+		add(contactAddressLabel); 
+		add(managerLabel);
+		add(jobTitleText);
+		add(managerText);
+		add(maritalComboBox);
+		add(emailLabel);
+		add(contactAddressText);
+		add(searchManagerButton);
 		add(createButton);
 		add(clearButton);
 		
@@ -219,7 +198,6 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				frame.setEnabled(true);
 				super.windowClosing(e);
 			}
 			
@@ -227,30 +205,14 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 		addWindowListener(adapter);
 	}
 
-	private String[] getTransectionModes(List<TransectionMode> allTransectionModes) {
-		List<String> transections = new ArrayList<>();
-		for (TransectionMode transectionMode : allTransectionModes) {
-			transections.add(transectionMode.getChannelName());
-		}
-		String[] trasectionArray = new String[transections.size()];
-		transections.toArray(trasectionArray);
-		return trasectionArray;
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		this.frame.setEnabled(false);
 		createAndShowGUI();
 
 	}
-	
-	public void setProductText(String productCode) {
-		this.productText.setText(productCode);
-		this.revalidate();
-	}
-	
-	public void setCustomerText(String customerCode) {
-		this.customerText.setText(customerCode);
+
+	public void setManagerText(String employeeCode) {
+		this.managerText.setText(employeeCode);
 		this.revalidate();
 	}
 }
