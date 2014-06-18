@@ -12,6 +12,30 @@ public class EmployeeRecordsRepository {
 
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
 	
+	public static void addNewEmployeeRecord(EmployeeRecord employeeRecord) {
+		String query = "INSERT INTO EMPLOYEES_RECORDS VALUES ('"+(getFirstThreeLetter(employeeRecord.getFirstname().toUpperCase())+getFirstThreeLetter(employeeRecord.getLastname().toUpperCase())+getRandomNo())+"','"
+								+employeeRecord.getFirstname()+"','"
+								+employeeRecord.getLastname()+"',"
+								+employeeRecord.getMobilenumber()+",'"
+								+employeeRecord.getGender()+"','"
+								+employeeRecord.getQualification()+"','"
+								+employeeRecord.getProfession()+"',"
+								+employeeRecord.getAge()+",'"
+								+employeeRecord.getMaritalStatus()+"','"
+								+employeeRecord.getJobDescription()+"','"
+								+employeeRecord.getManager().getEmployeeCode()+"','"
+								+employeeRecord.getEmail()+"','"
+								+employeeRecord.getEmployeed()+"','"
+								+employeeRecord.getJobTitle()+"','"
+								+employeeRecord.getContactAddress()+"',"
+								+(employeeRecord.getUserLoginDetail()!=null?"'"+employeeRecord.getUserLoginDetail().getUsername()+"'":"NULL")+","
+								+(employeeRecord.getReference1()!=null?"'"+employeeRecord.getReference1()+"'":"NULL")+","
+								+(employeeRecord.getReference2()!=null?"'"+employeeRecord.getReference2()+"'":"NULL")+","
+								+(employeeRecord.getReference3()!=null?"'"+employeeRecord.getReference3()+"'":"NULL")+")";
+		System.out.println(query);
+		jdbcTemplate.executeUpdate(query);
+	}
+	
 	public static List<EmployeeRecord> getEmployeeRecordByQuery(String query) {
 		List<EmployeeRecord> customerRecord = new ArrayList<EmployeeRecord>();
 		ResultSet employeeRecordInDb = null;
@@ -68,5 +92,13 @@ public class EmployeeRecordsRepository {
 	public static EmployeeRecord getEmployeeRecordByUsername(String username) {
 		String query = "SELECT * FROM EMPLOYEES_RECORDS WHERE username ='"+username+"'";
 		return getEmployeeRecordByQuery(query).get(0);
+	}
+		
+	private static int getRandomNo() {
+		return (int) (Math.random()*1000);
+	}
+	
+	private static String getFirstThreeLetter(String string) {
+		return (string!=null && string.length()>2)?string.substring(0, 2):string;
 	}
 }
