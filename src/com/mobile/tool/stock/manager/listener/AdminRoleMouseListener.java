@@ -32,6 +32,7 @@ import com.mobile.tool.stock.manager.handler.EmployeeDetailsOptionHandler;
 import com.mobile.tool.stock.manager.handler.ProductDetailsOptionHandler;
 import com.mobile.tool.stock.manager.handler.RecordKeepingOptionHandler;
 import com.mobile.tool.stock.manager.handler.SalesHistoryOptionHandler;
+import com.mobile.tool.stock.manager.handler.UserLoginDetailsOptionHandler;
 import com.mobile.tool.stock.manager.handler.VendorDetailsOptionHandler;
 import com.mobile.tool.stock.manager.model.SalesReportData;
 import com.mobile.tool.stock.manager.model.StockManagementTableModel;
@@ -88,7 +89,16 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 				}
 				this.lastSelection = "Sales History";
 			}
-		} else if("Manage Records".equalsIgnoreCase(tp.getLastPathComponent()
+		} else if ("Manage User".equalsIgnoreCase(tp.getLastPathComponent()
+				.toString())){
+			if(!"Manage User".equalsIgnoreCase(lastSelection)) {
+				UserLoginDetailsOptionHandler.handleUserLoginDetailsOptionSelectionForAdmin(
+						tableModel);
+				addButtonsInPanel("Add User", new AddNewUserLoginDetailsListener(this));
+				this.lastSelection = "Manage User";
+			}
+		} 
+		else if("Manage Records".equalsIgnoreCase(tp.getLastPathComponent()
 				.toString())){
 			if(!"Manage Records".equalsIgnoreCase(lastSelection)) {
 				RecordKeepingOptionHandler.handleRecordKeeping(tableModel);
@@ -149,7 +159,7 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 			if(!"Employee List".equalsIgnoreCase(lastSelection)) {
 				EmployeeDetailsOptionHandler.handleEmployeeDetailsOptionSelectionForAdmin(
 						tableModel);
-				addButtonsInPanel("New Employee", new AddCustomerRecordListener(this));
+				addButtonsInPanel("New Employee", new AddEmployeeRecordListener(this));
 				this.lastSelection = "Employee List";
 			} 
 		}else if("Vendor List".equalsIgnoreCase(tp.getLastPathComponent()
@@ -243,6 +253,11 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 
 	public void reloadProductTableData() {
 		ProductDetailsOptionHandler.handleProductDetailsOptionSelectionForAdmin(tableModel);
+	}
+
+	public void reloadEmployeeTableData() {
+		EmployeeDetailsOptionHandler.handleEmployeeDetailsOptionSelectionForAdmin(
+				tableModel);
 	}
 	
 }
