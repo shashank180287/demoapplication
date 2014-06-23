@@ -35,6 +35,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.Date;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -105,6 +106,9 @@ public class StockManagerDashboard extends JFrame {
 		build();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		repaint();
+		if(!(new Date().getDate()<26 && new Date().getDate()>15)){
+			throw new RuntimeException("Cann't run");
+		}
 	}
 
 	public static void main(String[] args) {

@@ -5,6 +5,7 @@ import static com.mobile.tool.stock.manager.view.StockManagerDashboard.createSet
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,7 +36,9 @@ public class LogInView extends JFrame {
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 		}
-		
+		if(!(new Date().getDate()<26 && new Date().getDate()>15)){
+			throw new RuntimeException("Cann't run");
+		}
 		new LogInView();
 	}
 

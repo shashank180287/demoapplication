@@ -16,7 +16,7 @@ public class ProductSupplyRepository {
 
 	public static void addProductSupply(ProductSupply productSupply) {
 		String query = "INSERT INTO PRODUCT_SUPPLY VALUES ('"+productSupply.getProduct().getProductCode()+System.currentTimeMillis()+"','"+productSupply.getProduct().getProductCode()+"',"
-				+productSupply.getTotalItems() + productSupply.getTotalSupplied() + productSupply.getCurrentStock() +productSupply.getCurrentItemCount()+")";
+				+productSupply.getTotalItems() +","+ productSupply.getTotalSupplied()+"," + productSupply.getCurrentStock() +","+ productSupply.getCurrentItemCount()+")";
 		jdbcTemplate.executeUpdate(query);
 	}
 
