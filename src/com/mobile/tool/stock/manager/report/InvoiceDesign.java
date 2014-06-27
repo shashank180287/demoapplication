@@ -159,7 +159,7 @@ public class InvoiceDesign {
 			JasperReportBuilder report = design.build(null);
 			OutputStream stream = new FileOutputStream(new File("D:\\demo.pdf"));
 			report.toPdf(stream);
-			report.show();
+			report.show(false);
 		} catch (DRException e) {
 			e.printStackTrace();
 		}
@@ -171,7 +171,7 @@ public class InvoiceDesign {
 			JasperReportBuilder report = design.build(salesRecord);
 			OutputStream stream = new FileOutputStream(new File("D:\\demo.pdf"));
 			report.toPdf(stream);
-			report.show();
+			report.show(false);
 		} catch (DRException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
