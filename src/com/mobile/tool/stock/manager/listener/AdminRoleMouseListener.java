@@ -214,7 +214,7 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 								List<SalesRecord> salesRecords = SaleRecordsRepository.getSaleRecordsForDatePeriod(fromDate, toDate);
 								DynamicReportDesign design = new DynamicReportDesign(new SalesReportData(salesRecords));
 								JasperReportBuilder report = design.build();
-								report.show();
+								report.show(false);
 							} catch (DRException e1) {
 								e1.printStackTrace();
 							}
@@ -245,7 +245,7 @@ public class AdminRoleMouseListener  extends MouseAdapter {
 							try {
 								DynamicReportDesign design = new DynamicReportDesign(new AssetsReportData(ProductSupplyRepository.getProductLiabilities(), SaleRecordsRepository.getProductEquity()));
 								JasperReportBuilder report = design.build();
-								report.show();
+								report.show(false);
 							} catch (DRException e1) {
 								e1.printStackTrace();
 							}
