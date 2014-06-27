@@ -113,7 +113,7 @@ public class Templates {
 		HyperLinkBuilder link = hyperLink("http://www.abc.org");
 		dynamicReportsComponent =
 		  cmp.horizontalList(
-		  	cmp.image(Templates.class.getResource("images/dynamicreports.png")).setFixedDimension(60, 60),
+		  	cmp.image(Templates.class.getClassLoader().getResource("images/dynamicreports.png")).setFixedDimension(60, 60),
 		  	cmp.verticalList(
 		  		cmp.text("Stock Management").setStyle(bold22CenteredStyle).setHorizontalAlignment(HorizontalAlignment.LEFT),
 		  		cmp.text("http://www.abc.org").setStyle(italicStyle).setHyperLink(link))).setFixedWidth(300);
