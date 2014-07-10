@@ -8,6 +8,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.net.URLDecoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +35,15 @@ import com.mobile.tool.stock.manager.repository.ProductSupplyRepository;
 import com.mobile.tool.stock.manager.repository.SaleRecordsRepository;
 import com.mobile.tool.stock.manager.repository.TransectionModeRepository;
 import com.mobile.tool.stock.manager.utils.SendingMailsUtility;
+import com.mobile.tool.stock.manager.view.StockDashboardTab;
 
 public class AddingNewSalesRecordListener extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6191510576296067659L;
-
+	JTextField customerText, productText;
 	JLabel headline, productLabel, noOfItemsLabel, saleTitleLabel, salesDescLabel, salesAmtLabel, confirmAmtLabel,  modeLabel, customerLabel, commentLabel;
-	JTextField productText, noOfItemsText, salesTitleText, salesDescText, salesAmtText, confirmAmtText, customerText, commentText;
 	JComboBox<String> modeComboBox;
 	JButton createButton, clearButton, searchProductButton, searchCustomerButton;
 	WindowAdapter adapter;
@@ -77,15 +79,17 @@ public class AddingNewSalesRecordListener extends JFrame implements ActionListen
 		commentLabel = new JLabel("Comment:");
 			
 		productText = new JTextField();
-		noOfItemsText = new JTextField();
+		productText.setEditable(false);
+		final JTextField noOfItemsText = new JTextField();
 		transectionModes = TransectionModeRepository.getAllTransectionModes();
 		String[] petStrings = getTransectionModes(transectionModes);
 		modeComboBox = new JComboBox<String>(petStrings);
 		
 		customerText = new JTextField();
-		commentText = new JTextField();
-		salesTitleText = new JTextField();
-		salesDescText = new JTextField();
+		customerText.setEditable(false);
+		final JTextField commentText = new JTextField();
+		final JTextField salesTitleText = new JTextField();
+		final JTextField salesDescText = new JTextField();
 		noOfItemsText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -95,8 +99,8 @@ public class AddingNewSalesRecordListener extends JFrame implements ActionListen
 				}
 			}
 		});
-		salesAmtText = new JTextField();
-		confirmAmtText = new JTextField();
+		final JTextField salesAmtText = new JTextField();
+		final JTextField confirmAmtText = new JTextField();
 		salesAmtText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -139,9 +143,31 @@ public class AddingNewSalesRecordListener extends JFrame implements ActionListen
 				ProductSupplyRepository.updateProductSupply(productSupply);
 				
 				InvoiceDesign.printInvoiceBill(salesRecord);
-				SendingMailsUtility.sendMailUsingGmailSMTP(salesRecord.getCustomer().getEmail(), "D:\\demo.pdf");
-				SendingMailsUtility.sendMailUsingGmailSMTP(salesRecord.getEmployee().getEmail(), "D:\\demo.pdf");
+				
+				String filePath = "D:\\";
+				try{
+					filePath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+					filePath = filePath + "/tmp/";
+					if(!new File(filePath).exists()){
+						filePath = "D:\\";
+					}
+				}catch(Exception e1){
+					filePath = "D:\\";
+				}
+				
+				SendingMailsUtility.sendMailUsingGmailSMTP(salesRecord.getCustomer().getEmail(), filePath + "demo.pdf");
+				SendingMailsUtility.sendMailUsingGmailSMTP(salesRecord.getEmployee().getEmail(), filePath + "demo.pdf");
 				listener.reloadTableData();
+				
+				productText.setText("");
+				noOfItemsText.setText("");
+				salesTitleText.setText("");
+				salesDescText.setText("");
+				salesAmtText.setText("");
+				confirmAmtText.setText("");
+				customerText.setText("");
+				commentText.setText("");
+				
 				dispose();
 			}
 
@@ -164,6 +190,8 @@ public class AddingNewSalesRecordListener extends JFrame implements ActionListen
 				salesDescText.setText("");
 				salesAmtText.setText("");
 				confirmAmtText.setText("");
+				customerText.setText("");
+				commentText.setText("");
 			}
 		});
 

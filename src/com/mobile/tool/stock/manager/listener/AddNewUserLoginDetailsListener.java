@@ -30,7 +30,7 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 	private static final long serialVersionUID = 6191510576296067659L;
 
 	JLabel headline, usernameLabel, passwordLabel, confirmPasswordLabel, userTypeLabel, userCodeLabel;
-	JTextField usernameText, passwordText, userCodeText;
+	JTextField userCodeText;
 	JPasswordField confirmPasswordText;
 	JComboBox<String> userTypeCombo;
 	
@@ -60,8 +60,8 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 		userTypeLabel = new JLabel("Role:");
 		userCodeLabel = new JLabel("User:");
 		
-		usernameText = new JTextField();
-		passwordText = new JTextField();
+		final JTextField usernameText = new JTextField();
+		final JTextField passwordText = new JTextField();
 		confirmPasswordText = new JPasswordField();
 		userTypeCombo = new JComboBox<String>(new String[]{"Admin", "Employee", "Customer"});
 		userTypeCombo.addActionListener(new ActionListener() {
@@ -82,7 +82,7 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 			}
 		});
 		userCodeText = new JTextField();
-		userCodeText.setEnabled(false);
+		userCodeText.setEditable(false);
 		
 		createButton = new JButton("Create");
 		createButton.setEnabled(false);
@@ -110,6 +110,10 @@ public class AddNewUserLoginDetailsListener extends JFrame implements ActionList
 				}
 				
 				listener.reloadUserDetailsData();
+				usernameText.setText("");
+				passwordText.setText("");
+				confirmPasswordText.setText("");
+				userCodeText.setText("");
 				dispose();
 			}
 		});

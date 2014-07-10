@@ -19,7 +19,7 @@ import com.mobile.tool.stock.manager.entity.TransectionMode;
 public class SaleRecordsRepository {
 
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate
-			.getMySQLJdbcTemplate();
+			.getDerbyJdbcTemplate();
 
 	public static void addSalesRecord(SalesRecord salesRecord) {
 		String query = "INSERT INTO SALES_RECORDS VALUES ('"

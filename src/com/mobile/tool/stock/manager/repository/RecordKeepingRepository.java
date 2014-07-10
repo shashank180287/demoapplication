@@ -9,7 +9,7 @@ import com.mobile.tool.stock.manager.entity.RecordKeeping;
 
 public class RecordKeepingRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	private static int getCurrentIdCursor() {
 		String query = "SELECT MAX(record_id) FROM RECORD_KEEPING";

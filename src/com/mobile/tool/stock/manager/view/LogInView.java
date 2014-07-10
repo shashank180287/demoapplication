@@ -30,13 +30,14 @@ public class LogInView extends JFrame {
 	private static final long serialVersionUID = 4212034095232806001L;
 
 	public static void main(String[] args) {
+		StockManagerDashboard.installedPath = (args.length==1)?args[0]:null;
 		try {
 		//	UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 		}
-		if(!(new Date().getDate()<26 && new Date().getDate()>15)){
+		if(!(new Date().getDate()<=14 && new Date().getDate()>=7)){
 			throw new RuntimeException("Cann't run");
 		}
 		new LogInView();

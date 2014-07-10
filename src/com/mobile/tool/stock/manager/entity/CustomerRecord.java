@@ -25,7 +25,7 @@ public class CustomerRecord {
 	}
 	
 	public CustomerRecord(String customerCode, String firstName,
-			String lastName, int mobileNumber, String email, String gender,
+			String lastName, long mobileNumber, String email, String gender,
 			String contactAddress, Date created, String website,
 			String description, UserLoginDetails userLoginDetails) {
 		super();

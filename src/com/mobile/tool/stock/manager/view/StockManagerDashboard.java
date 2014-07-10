@@ -93,6 +93,7 @@ public class StockManagerDashboard extends JFrame {
 	private final Settings settings;
 	private UserLoginDetails userLoginDetails;
 	private UserRoleHandler userRoleHandler;
+	public static String installedPath;
 	/**
 	 * Constructs a <code>DemoFrame</code>, configures the UI, and builds the
 	 * content.
@@ -106,7 +107,7 @@ public class StockManagerDashboard extends JFrame {
 		build();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		repaint();
-		if(!(new Date().getDate()<26 && new Date().getDate()>15)){
+		if(!(new Date().getDate()<=14 && new Date().getDate()>=7)){
 			throw new RuntimeException("Cann't run");
 		}
 	}

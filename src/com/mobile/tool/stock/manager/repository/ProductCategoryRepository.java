@@ -9,7 +9,7 @@ import com.mobile.tool.stock.manager.entity.ProductCatagory;
 
 public class ProductCategoryRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static List<ProductCatagory> getProductCatagoryByQuery(String query) {
 		List<ProductCatagory> productCatagories = new ArrayList<>();

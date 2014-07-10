@@ -13,14 +13,35 @@ public class JdbcTemplate {
 	private JdbcTemplate() {
 	}
 
-	public synchronized static JdbcTemplate getMySQLJdbcTemplate() {
+	public synchronized static JdbcTemplate getPostgreSQLJdbcTemplate() {
 		if (jdbcTemplate == null)
 			jdbcTemplate = new JdbcTemplate();
-		jdbcTemplate.initializeConnection();
+		jdbcTemplate.initializePostgreSQLConnection();
 		return jdbcTemplate;
 	}
 
-	private void initializeConnection() {
+	public synchronized static JdbcTemplate getDerbyJdbcTemplate() {
+		if (jdbcTemplate == null)
+			jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate.initializeDerbyConnection();
+		return jdbcTemplate;
+	}
+	
+	private void initializeDerbyConnection() {
+		try {
+			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+			connection = DriverManager.getConnection(
+					"jdbc:derby:stockmanager;");//5432
+		} catch (SQLException e) {
+			System.out.println("ERROR: failed to connect to the databse");
+			e.printStackTrace();
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println("ERROR: failed to load MySQL JDBC driver.");
+			cnfe.printStackTrace();
+		}
+	}
+
+	private void initializePostgreSQLConnection() {
 		try {
 			Class.forName("org.postgresql.Driver");
 			connection = DriverManager.getConnection(

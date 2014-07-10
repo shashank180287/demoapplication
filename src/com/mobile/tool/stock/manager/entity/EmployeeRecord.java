@@ -33,7 +33,7 @@ public class EmployeeRecord {
 	}
 
 	public EmployeeRecord(String employeeCode, String firstname,
-			String lastname, int mobilenumber, String gender,
+			String lastname, long mobilenumber, String gender,
 			String qualification, String profession, int age,
 			String maritalStatus, String jobDescription,
 			EmployeeRecord manager, String email, Date employeed,

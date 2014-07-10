@@ -12,7 +12,7 @@ import com.mobile.tool.stock.manager.entity.ProductSupply;
 
 public class ProductSupplyRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 
 	public static void addProductSupply(ProductSupply productSupply) {
 		String query = "INSERT INTO PRODUCT_SUPPLY VALUES ('"+productSupply.getProduct().getProductCode()+System.currentTimeMillis()+"','"+productSupply.getProduct().getProductCode()+"',"

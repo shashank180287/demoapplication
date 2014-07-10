@@ -11,7 +11,7 @@ import com.mobile.tool.stock.manager.entity.VendorRecord;
 
 public class ProductRecordRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static void addProductRecord(ProductRecord productRecord) {
 		String query = "INSERT INTO PRODUCT_RECORD VALUES ('"+(productRecord.getName().toUpperCase().substring(0, 3)+getRandomNo())+"',"

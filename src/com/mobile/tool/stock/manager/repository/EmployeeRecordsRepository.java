@@ -11,7 +11,7 @@ import com.mobile.tool.stock.manager.entity.UserLoginDetails;
 public class EmployeeRecordsRepository {
 
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate
-			.getMySQLJdbcTemplate();
+			.getDerbyJdbcTemplate();
 
 	public static void addNewEmployeeRecord(EmployeeRecord employeeRecord) {
 		String query = "INSERT INTO EMPLOYEES_RECORDS VALUES ('"
@@ -37,9 +37,9 @@ public class EmployeeRecordsRepository {
 				+ employeeRecord.getMaritalStatus()
 				+ "','"
 				+ employeeRecord.getJobDescription()
-				+ "','"
-				+ employeeRecord.getManager().getEmployeeCode()
-				+ "','"
+				+ "',"
+				+ (employeeRecord.getManager()!=null?"'"+employeeRecord.getManager().getEmployeeCode()+"'":"NULL")
+				+ ",'"
 				+ employeeRecord.getEmail()
 				+ "','"
 				+ employeeRecord.getEmployeed()
@@ -80,7 +80,7 @@ public class EmployeeRecordsRepository {
 						.getString("employee_code"), employeeRecordInDb
 						.getString("first_name"), employeeRecordInDb
 						.getString("last_name"), employeeRecordInDb
-						.getInt("mobile_number"), employeeRecordInDb
+						.getLong("mobile_number"), employeeRecordInDb
 						.getString("gender"), employeeRecordInDb
 						.getString("qualification"), employeeRecordInDb
 						.getString("profession"), employeeRecordInDb

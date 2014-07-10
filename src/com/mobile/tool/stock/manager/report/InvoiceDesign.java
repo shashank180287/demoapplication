@@ -35,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.base.expression.AbstractSimpleExpression;
@@ -48,6 +49,7 @@ import net.sf.dynamicreports.report.definition.ReportParameters;
 import net.sf.dynamicreports.report.exception.DRException;
 
 import com.mobile.tool.stock.manager.entity.SalesRecord;
+import com.mobile.tool.stock.manager.view.StockDashboardTab;
 
 /**
  * @author Ricardo Mariaca (r.mariaca@dynamicreports.org)
@@ -157,9 +159,19 @@ public class InvoiceDesign {
 		InvoiceDesign design = new InvoiceDesign();
 		try {
 			JasperReportBuilder report = design.build(null);
-			OutputStream stream = new FileOutputStream(new File("D:\\demo.pdf"));
+			String filePath = "D:\\";
+			try{
+				filePath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+				filePath = filePath + "/tmp/";
+				if(!new File(filePath).exists()){
+					filePath = "D:\\";
+				}
+			}catch(Exception e){
+				filePath = "D:\\";
+			}
+			OutputStream stream = new FileOutputStream(new File(filePath+"demo.pdf"));
 			report.toPdf(stream);
-			report.show();
+			report.show(false);
 		} catch (DRException e) {
 			e.printStackTrace();
 		}
@@ -169,7 +181,17 @@ public class InvoiceDesign {
 		InvoiceDesign design = new InvoiceDesign();
 		try {
 			JasperReportBuilder report = design.build(salesRecord);
-			OutputStream stream = new FileOutputStream(new File("D:\\demo.pdf"));
+			String filePath = "D:\\";
+			try{
+				filePath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+				filePath = filePath + "/tmp/";
+				if(!new File(filePath).exists()){
+					filePath = "D:\\";
+				}
+			}catch(Exception e){
+				filePath = "D:\\";
+			}
+			OutputStream stream = new FileOutputStream(new File(filePath+"demo.pdf"));
 			report.toPdf(stream);
 			report.show();
 		} catch (DRException e) {

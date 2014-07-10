@@ -11,7 +11,7 @@ import com.mobile.tool.stock.manager.entity.VendorRecord;
 
 public class VendorRecordRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static void addVendorRecord(VendorRecord vendorRecord) {
 		String query = "INSERT INTO VENDOR_RECORD VALUES ('"+(vendorRecord.getName().toUpperCase().substring(0, 3)+getRandomNo())+"',"
@@ -40,7 +40,7 @@ public class VendorRecordRepository {
 				UserLoginDetails userLoginDetails = UserLoginDetailsRepository.getUserLoginDetailsByUsername(username);
 				vendorRecords.add(new VendorRecord(vendorRecordInDb.getString("vendor_code"), vendorCategory, 
 						 vendorRecordInDb.getString("name"), vendorRecordInDb.getString("title"),
-						 vendorRecordInDb.getString("description"), vendorRecordInDb.getInt("mobile_number"),
+						 vendorRecordInDb.getString("description"), vendorRecordInDb.getLong("mobile_number"),
 						 vendorRecordInDb.getString("email"), vendorRecordInDb.getString("contact_address"),
 						 vendorRecordInDb.getString("permanent_address"), vendorRecordInDb.getString("website"), userLoginDetails));
 			}

@@ -10,7 +10,7 @@ import com.mobile.tool.stock.manager.entity.UserRole;
 public class UserRoleRepository {
 
 	private static List<UserRole> userRoles;
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static List<UserRole> getUserRoles() {
 		if(userRoles!=null)

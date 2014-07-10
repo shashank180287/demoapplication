@@ -27,8 +27,7 @@ public class AddNewVendorRecordListener extends JFrame implements ActionListener
 	private static final long serialVersionUID = 6191510576296067659L;
 
 	JLabel headline, nameLabel, categoryLabel, mobileNoLabel, titleLabel, emailLabel, contactAddressLabel, permanentAddressLabel, websiteLabel, descriptionLabel;
-	JTextField nameText, mobileNoText, titleText, emailText, websiteText, descriptionText, categoryText;
-	JTextArea contactAddressText, permanentAddressText;
+	JTextField categoryText;
 	JButton createButton, clearButton, searchCategoryButton;
 	WindowAdapter adapter;
 	JFrame frame;
@@ -60,13 +59,14 @@ public class AddNewVendorRecordListener extends JFrame implements ActionListener
 		descriptionLabel = new JLabel("Description:");
 		categoryLabel = new JLabel("Category:");
 		
-		nameText = new JTextField();
-		mobileNoText = new JTextField();
-		permanentAddressText = new JTextArea();
+		final JTextField nameText = new JTextField();
+		final JTextField mobileNoText = new JTextField();
+		final JTextArea permanentAddressText = new JTextArea();
 		categoryText = new JTextField();
-		descriptionText = new JTextField();
-		titleText = new JTextField();
-		emailText = new JTextField();
+		categoryText.setEditable(false);
+		final JTextField descriptionText = new JTextField();
+		final JTextField titleText = new JTextField();
+		final JTextField emailText = new JTextField();
 		mobileNoText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -76,8 +76,8 @@ public class AddNewVendorRecordListener extends JFrame implements ActionListener
 				}
 			}
 		});
-		contactAddressText = new JTextArea();
-		websiteText = new JTextField();
+		final JTextArea contactAddressText = new JTextArea();
+		final JTextField websiteText = new JTextField();
 		createButton = new JButton("Create");
 		clearButton = new JButton("Clear");
 		searchCategoryButton = new JButton("..");
@@ -88,10 +88,19 @@ public class AddNewVendorRecordListener extends JFrame implements ActionListener
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VendorRecord vendorRecord = new VendorRecord(null, VendorCategoryRepository.getVendorCategoryByCategoryName(categoryText.getText()), 
-						nameText.getText(), titleText.getText(), descriptionText.getText(), Integer.parseInt(mobileNoText.getText()), emailText.getText(), contactAddressText.getText(), 
+						nameText.getText(), titleText.getText(), descriptionText.getText(), Long.parseLong(mobileNoText.getText()), emailText.getText(), contactAddressText.getText(), 
 						permanentAddressText.getText(), websiteText.getText(), null);
 				VendorRecordRepository.addVendorRecord(vendorRecord);
 				listener.reloadVendorTableData();
+				nameText.setText("");
+				mobileNoText.setText("");
+				titleText.setText("");
+				emailText.setText("");
+				contactAddressText.setText("");
+				websiteText.setText("");
+				descriptionText.setText("");
+				permanentAddressText.setText("");
+				categoryText.setText("");
 				dispose();
 			}
 		});
@@ -106,6 +115,7 @@ public class AddNewVendorRecordListener extends JFrame implements ActionListener
 				emailText.setText("");
 				contactAddressText.setText("");
 				websiteText.setText("");
+				descriptionText.setText("");
 				permanentAddressText.setText("");
 				categoryText.setText("");
 			}
@@ -161,7 +171,6 @@ public class AddNewVendorRecordListener extends JFrame implements ActionListener
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				frame.setEnabled(true);
 				super.windowClosing(e);
 			}
 			
@@ -171,7 +180,6 @@ public class AddNewVendorRecordListener extends JFrame implements ActionListener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		this.frame.setEnabled(false);
 		createAndShowGUI();
 
 	}

@@ -17,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.mobile.tool.stock.manager.entity.EmployeeRecord;
 import com.mobile.tool.stock.manager.repository.EmployeeRecordsRepository;
 
@@ -27,8 +29,7 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 	private static final long serialVersionUID = 6191510576296067659L;
 
 	JLabel headline, firstNameLabel, mobileNumberLabel, lastNameLabel, genderLabel, qualificationLabel, professionLabel,  ageLabel, maritalStatusLabel, jobDescriptionLabel, emailLabel, jobTitleLabel, contactAddressLabel, managerLabel;
-	JTextField firstNameText, mobileNoText, lastNameText, qualificationText, professionText, ageText, jobDescriptionText, emailText, jobTitleText, managerText;
-	JTextArea contactAddressText;
+	JTextField managerText;
 	JComboBox<String> genderComboBox, maritalComboBox;
 	JButton createButton, clearButton, searchManagerButton;
 	WindowAdapter adapter;
@@ -64,19 +65,20 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 		managerLabel = new JLabel("Manager:");
 		
 		
-		firstNameText = new JTextField();
-		mobileNoText = new JTextField();
+		final JTextField firstNameText = new JTextField();
+		final JTextField mobileNoText = new JTextField();
 		String[] genderOptions = new String[]{"Male", "Female"};
 		genderComboBox = new JComboBox<String>(genderOptions);
 		String[] maritalStatusOptions = new String[]{"Married", "Unmarried"};
 		maritalComboBox = new JComboBox<String>(maritalStatusOptions);
-		contactAddressText = new JTextArea();
-		jobDescriptionText = new JTextField();
-		emailText = new JTextField();
-		jobTitleText = new JTextField();
+		final JTextArea contactAddressText = new JTextArea();
+		final JTextField jobDescriptionText = new JTextField();
+		final JTextField emailText = new JTextField();
+		final JTextField jobTitleText = new JTextField();
 		managerText = new JTextField();
-		lastNameText = new JTextField();
-		qualificationText = new JTextField();
+		managerText.setEditable(false);
+		final JTextField lastNameText = new JTextField();
+		final JTextField qualificationText = new JTextField();
 		mobileNoText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -86,8 +88,8 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 				}
 			}
 		});
-		professionText = new JTextField();
-		ageText = new JTextField();
+		final JTextField professionText = new JTextField();
+		final JTextField ageText = new JTextField();
 		ageText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -108,12 +110,23 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				EmployeeRecord employeeRecord = new EmployeeRecord(null, firstNameText.getText(), lastNameText.getText(),
-						(mobileNoText.getText()!=null? Integer.valueOf(mobileNoText.getText()):0), genderComboBox.getSelectedItem().toString(),
-						qualificationText.getText(), professionText.getText(), (ageText.getText()!=null?Integer.valueOf(ageText.getText()):0), 
-						maritalComboBox.getSelectedItem().toString(), jobDescriptionText.getText(), EmployeeRecordsRepository.getEmployeeRecordByEmployeeCode(managerText.getText()), 
+						(!StringUtils.isEmpty(mobileNoText.getText())? Long.parseLong(mobileNoText.getText()):0), genderComboBox.getSelectedItem().toString(),
+						qualificationText.getText(), professionText.getText(), (!StringUtils.isEmpty(ageText.getText())?Integer.valueOf(ageText.getText()):0), 
+						maritalComboBox.getSelectedItem().toString(), jobDescriptionText.getText(), StringUtils.isEmpty(managerText.getText())?null:EmployeeRecordsRepository.getEmployeeRecordByEmployeeCode(managerText.getText()), 
 						emailText.getText(), new Date(System.currentTimeMillis()), jobTitleText.getText(), contactAddressText.getText(), null, null, null, null);
 				EmployeeRecordsRepository.addNewEmployeeRecord(employeeRecord);
 				listener.reloadEmployeeTableData();
+				firstNameText.setText("");
+				lastNameText.setText("");
+				mobileNoText.setText("");
+				qualificationText.setText("");
+				professionText.setText("");
+				ageText.setText("");
+				jobDescriptionText.setText("");
+				emailText.setText("");
+				jobTitleText.setText("");
+				contactAddressText.setText("");
+				managerText.setText("");
 				dispose();
 			}
 		});
@@ -128,6 +141,11 @@ public class AddEmployeeRecordListener extends JFrame implements ActionListener 
 				qualificationText.setText("");
 				professionText.setText("");
 				ageText.setText("");
+				jobDescriptionText.setText("");
+				emailText.setText("");
+				jobTitleText.setText("");
+				contactAddressText.setText("");
+				managerText.setText("");
 			}
 		});
 

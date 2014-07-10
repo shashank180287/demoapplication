@@ -28,12 +28,12 @@ public class AddNewProductRecordListener extends JFrame implements ActionListene
 	private static final long serialVersionUID = 6191510576296067659L;
 
 	JLabel headline, nameLabel, categoryLabel, descriptionLabel, unitPriceLabel, bulkPriceLabel, orderCountLabel, vendorLabel;
-	JTextField nameText, descriptionText, categoryText, unitPriceText, bulkPriceText, orderCountText, vendorText;
 	JButton createButton, clearButton, searchCategoryButton, searchVendorButton;
+	JTextField categoryText, vendorText;
 	WindowAdapter adapter;
 	JFrame frame;
 	private AdminRoleMouseListener listener;
-	
+
 	public AddNewProductRecordListener(AdminRoleMouseListener listener)
 			throws HeadlessException {
 		super();
@@ -58,12 +58,13 @@ public class AddNewProductRecordListener extends JFrame implements ActionListene
 		descriptionLabel = new JLabel("Description:");
 		categoryLabel = new JLabel("Category:");
 		
-		nameText = new JTextField();
-		unitPriceText = new JTextField();
+		final JTextField nameText = new JTextField();
+		final JTextField unitPriceText = new JTextField();
 		categoryText = new JTextField();
-		descriptionText = new JTextField();
-		bulkPriceText = new JTextField();
-		orderCountText = new JTextField();
+		categoryText.setEditable(false);
+		final JTextField descriptionText = new JTextField();
+		final JTextField bulkPriceText = new JTextField();
+		final JTextField orderCountText = new JTextField();
 		unitPriceText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -92,6 +93,7 @@ public class AddNewProductRecordListener extends JFrame implements ActionListene
 			}
 		});
 		vendorText = new JTextField();
+		vendorText.setEditable(false);
 		createButton = new JButton("Create");
 		clearButton = new JButton("Clear");
 		searchCategoryButton = new JButton("..");
@@ -109,6 +111,13 @@ public class AddNewProductRecordListener extends JFrame implements ActionListene
 						Integer.parseInt(orderCountText.getText()), VendorRecordRepository.getVendorRecordByCode(vendorText.getText()), new Date(System.currentTimeMillis()));
 				ProductRecordRepository.addProductRecord(productRecord);
 				listener.reloadProductTableData();
+				nameText.setText("");
+				unitPriceText.setText("");
+				bulkPriceText.setText("");
+				orderCountText.setText("");
+				descriptionText.setText("");
+				vendorText.setText("");
+				categoryText.setText("");
 				dispose();
 			}
 		});
@@ -171,7 +180,6 @@ public class AddNewProductRecordListener extends JFrame implements ActionListene
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				frame.setEnabled(true);
 				super.windowClosing(e);
 			}
 			
@@ -181,7 +189,6 @@ public class AddNewProductRecordListener extends JFrame implements ActionListene
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		this.frame.setEnabled(false);
 		createAndShowGUI();
 
 	}

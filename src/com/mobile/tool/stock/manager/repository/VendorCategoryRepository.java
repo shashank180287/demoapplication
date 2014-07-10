@@ -9,7 +9,7 @@ import com.mobile.tool.stock.manager.entity.VendorCategory;
 
 public class VendorCategoryRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static List<VendorCategory> getVendorCategoryByQuery(String  query) {
 		List<VendorCategory> vendorCategories = new ArrayList<>();

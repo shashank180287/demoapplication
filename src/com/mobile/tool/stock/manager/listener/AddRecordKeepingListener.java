@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import javax.swing.JTextField;
 
 import com.mobile.tool.stock.manager.entity.RecordKeeping;
 import com.mobile.tool.stock.manager.repository.RecordKeepingRepository;
+import com.mobile.tool.stock.manager.view.StockDashboardTab;
 
 public class AddRecordKeepingListener extends JFrame implements ActionListener {
 	/**
@@ -28,9 +30,7 @@ public class AddRecordKeepingListener extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 6191510576296067659L;
 
 	JLabel headline, typeLabel, commentLabel, attachmentLabel;
-	JTextField uploadFileText;
 	JButton uploadFileButton;
-	JTextArea commentText;
 	JComboBox<String> typeBox;
 	String filePath;
 
@@ -42,6 +42,15 @@ public class AddRecordKeepingListener extends JFrame implements ActionListener {
 	private AdminRoleMouseListener listener;
 
 	public AddRecordKeepingListener(AdminRoleMouseListener listener) {
+		try{
+			recordFilePath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+			recordFilePath = recordFilePath + "/tmp/";
+			if(!new File(recordFilePath).exists()){
+				recordFilePath = "D:\\";
+			}
+		}catch(Exception e){
+			recordFilePath = "D:\\";
+		}
 		this.listener = listener;
 	}
 
@@ -59,7 +68,7 @@ public class AddRecordKeepingListener extends JFrame implements ActionListener {
 		commentLabel = new JLabel("Comment:");
 		attachmentLabel = new JLabel("Attachment:");
 
-		uploadFileText = new JTextField();
+		final JTextField uploadFileText = new JTextField();
 		uploadFileButton = new JButton();
 		uploadFileButton.setText("..");
 		uploadFileButton.addActionListener(new ActionListener() {
@@ -78,7 +87,7 @@ public class AddRecordKeepingListener extends JFrame implements ActionListener {
 
 		String[] petStrings = { "File", "Text" };
 		typeBox = new JComboBox<String>(petStrings);
-		commentText = new JTextArea();
+		final JTextArea commentText = new JTextArea();
 		createButton = new JButton("Create");
 		clearButton = new JButton("Clear");
 
@@ -108,6 +117,8 @@ public class AddRecordKeepingListener extends JFrame implements ActionListener {
 					}
 				}
 				listener.reloadRecordKeepingTableData();
+				uploadFileText.setText("");
+				commentText.setText("");
 				dispose();
 			}
 		});
@@ -148,7 +159,6 @@ public class AddRecordKeepingListener extends JFrame implements ActionListener {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// frame.setEnabled(true);
 				super.windowClosing(e);
 			}
 
@@ -158,7 +168,6 @@ public class AddRecordKeepingListener extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// this.frame.setEnabled(false);
 		createAndShowGUI();
 
 	}

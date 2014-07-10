@@ -10,7 +10,7 @@ import com.mobile.tool.stock.manager.entity.UserLoginDetails;
 
 public class UserAccessHistoryRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static int getCurrentIdCursor() {
 		String query = "SELECT MAX(id) FROM USER_ACCESS_HISTORY";

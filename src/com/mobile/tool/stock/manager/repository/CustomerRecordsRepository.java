@@ -12,7 +12,7 @@ import com.mobile.tool.stock.manager.entity.UserLoginDetails;
 public class CustomerRecordsRepository {
 
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate
-			.getMySQLJdbcTemplate();
+			.getDerbyJdbcTemplate();
 
 	public static void addCustomerRecord(CustomerRecord customerRecord) {
 		String query = "INSERT INTO CUSTOMER_RECORD VALUES ('"
@@ -74,7 +74,7 @@ public class CustomerRecordsRepository {
 						.getString("customer_code"), customerRecordInDb
 						.getString("first_name"), customerRecordInDb
 						.getString("last_name"), customerRecordInDb
-						.getInt("mobile_number"), customerRecordInDb
+						.getLong("mobile_number"), customerRecordInDb
 						.getString("email"), customerRecordInDb
 						.getString("gender"), customerRecordInDb
 						.getString("contact_address"), customerRecordInDb

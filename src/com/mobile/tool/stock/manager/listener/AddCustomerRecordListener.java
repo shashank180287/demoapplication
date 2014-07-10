@@ -26,8 +26,6 @@ public class AddCustomerRecordListener extends JFrame implements ActionListener 
 	private static final long serialVersionUID = 6191510576296067659L;
 
 	JLabel headline, firstNameLabel, mobileNoLabel, lastNameLabel, emailLabel, addressLabel, websiteLabel,  genderLabel, descriptionLabel;
-	JTextField firstNameText, mobileNoText, lastNameText, emailText, websiteText, descriptionText;
-	JTextArea addressText;
 	JComboBox<String> genderComboBox;
 	JButton createButton, clearButton;
 	WindowAdapter adapter;
@@ -58,14 +56,14 @@ public class AddCustomerRecordListener extends JFrame implements ActionListener 
 		genderLabel = new JLabel("Gender:");
 		descriptionLabel = new JLabel("Description:");
 			
-		firstNameText = new JTextField();
-		mobileNoText = new JTextField();
+		final JTextField firstNameText = new JTextField();
+		final JTextField mobileNoText = new JTextField();
 		String[] petStrings = {"Male", "Female"};
 		genderComboBox = new JComboBox<String>(petStrings);
 		
-		descriptionText = new JTextField();
-		lastNameText = new JTextField();
-		emailText = new JTextField();
+		final JTextField descriptionText = new JTextField();
+		final JTextField lastNameText = new JTextField();
+		final JTextField emailText = new JTextField();
 		mobileNoText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -75,8 +73,8 @@ public class AddCustomerRecordListener extends JFrame implements ActionListener 
 				}
 			}
 		});
-		addressText = new JTextArea();
-		websiteText = new JTextField();
+		final JTextArea addressText = new JTextArea();
+		final JTextField websiteText = new JTextField();
 		createButton = new JButton("Create");
 		clearButton = new JButton("Clear");
 		
@@ -84,11 +82,18 @@ public class AddCustomerRecordListener extends JFrame implements ActionListener 
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CustomerRecord customerRecord = new CustomerRecord(null, firstNameText.getText(), lastNameText.getText(), Integer.parseInt(mobileNoText.getText()), 
+				CustomerRecord customerRecord = new CustomerRecord(null, firstNameText.getText(), lastNameText.getText(), Long.parseLong(mobileNoText.getText()), 
 						emailText.getText(), genderComboBox.getSelectedItem().toString(), addressText.getText(), null, 
 						websiteText.getText(), descriptionText.getText(), null);
 				CustomerRecordsRepository.addCustomerRecord(customerRecord);
 				listener.reloadCustomerTableData();
+				firstNameText.setText("");
+				mobileNoText.setText("");
+				lastNameText.setText("");
+				emailText.setText("");
+				descriptionText.setText("");
+				addressText.setText("");
+				websiteText.setText("");
 				dispose();
 			}
 		});
@@ -101,6 +106,7 @@ public class AddCustomerRecordListener extends JFrame implements ActionListener 
 				mobileNoText.setText("");
 				lastNameText.setText("");
 				emailText.setText("");
+				descriptionText.setText("");
 				addressText.setText("");
 				websiteText.setText("");
 			}
@@ -150,7 +156,6 @@ public class AddCustomerRecordListener extends JFrame implements ActionListener 
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				frame.setEnabled(true);
 				super.windowClosing(e);
 			}
 			
@@ -160,18 +165,8 @@ public class AddCustomerRecordListener extends JFrame implements ActionListener 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		this.frame.setEnabled(false);
 		createAndShowGUI();
 
 	}
-	
-	public void setProductText(String productCode) {
-		this.firstNameText.setText(productCode);
-		this.revalidate();
-	}
-	
-	public void setCustomerText(String customerCode) {
-		this.descriptionText.setText(customerCode);
-		this.revalidate();
-	}
+
 }

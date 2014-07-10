@@ -23,7 +23,7 @@ public class VendorRecord {
 	}
 
 	public VendorRecord(String vendorCode, VendorCategory vendorCategory,
-			String name, String title, String description, int mobilenumber,
+			String name, String title, String description, long mobilenumber,
 			String email, String contactAddress, String permanentAddress,
 			String website, UserLoginDetails userLoginDetails) {
 		super();

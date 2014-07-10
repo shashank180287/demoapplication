@@ -9,7 +9,7 @@ import com.mobile.tool.stock.manager.entity.TransectionMode;
 
 public class TransectionModeRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static TransectionMode getTransectionModeByModeId(int channelId) {
 		String query = "SELECT * FROM TRANSECTION_MODE WHERE channel_id="+channelId;

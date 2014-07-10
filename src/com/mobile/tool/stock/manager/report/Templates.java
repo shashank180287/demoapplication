@@ -25,7 +25,11 @@ package com.mobile.tool.stock.manager.report;
 import static net.sf.dynamicreports.report.builder.DynamicReports.*;
 
 import java.awt.Color;
+import java.io.File;
+import java.net.URLDecoder;
 import java.util.Locale;
+
+import com.mobile.tool.stock.manager.view.StockDashboardTab;
 
 import net.sf.dynamicreports.report.base.expression.AbstractValueFormatter;
 import net.sf.dynamicreports.report.builder.HyperLinkBuilder;
@@ -111,9 +115,19 @@ public class Templates {
 		currencyType = new CurrencyType();
 
 		HyperLinkBuilder link = hyperLink("http://www.abc.org");
+		String logoPath = "images/mobile_tool.png";
+		try{
+			logoPath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+			logoPath = logoPath + "/logo/logo.png";
+			if(!new File(logoPath).exists()){
+				logoPath = "images/mobile_tool.png";
+			}
+		}catch(Exception e){
+			logoPath = "images/mobile_tool.png";
+		}
 		dynamicReportsComponent =
 		  cmp.horizontalList(
-		  	cmp.image(Templates.class.getResource("images/dynamicreports.png")).setFixedDimension(60, 60),
+		  	cmp.image(Templates.class.getClassLoader().getResource(logoPath)).setFixedDimension(60, 60),
 		  	cmp.verticalList(
 		  		cmp.text("Stock Management").setStyle(bold22CenteredStyle).setHorizontalAlignment(HorizontalAlignment.LEFT),
 		  		cmp.text("http://www.abc.org").setStyle(italicStyle).setHyperLink(link))).setFixedWidth(300);

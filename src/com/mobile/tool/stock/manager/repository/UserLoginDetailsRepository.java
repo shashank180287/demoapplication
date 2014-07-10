@@ -10,7 +10,7 @@ import com.mobile.tool.stock.manager.entity.UserRole;
 
 public class UserLoginDetailsRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getMySQLJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
 	
 	public static void addUserLoginDetails(UserLoginDetails userLoginDetails) {
 		String query = "INSERT INTO USER_LOGIN_DETAILS VALUES ('"+userLoginDetails.getUsername()+"','"+userLoginDetails.getPassword()+"',"+userLoginDetails.getUserRole().getRoleId()+")";

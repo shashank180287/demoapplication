@@ -25,7 +25,7 @@ public class AddNewProductSupplyListener extends JFrame implements ActionListene
 	private static final long serialVersionUID = 6191510576296067659L;
 
 	JLabel headline, productLabel, noOfItemsLabel;
-	JTextField productText, noOfItemsText;
+	JTextField productText;
 	JButton createButton, clearButton, searchProductButton;
 	WindowAdapter adapter;
 	
@@ -49,7 +49,8 @@ public class AddNewProductSupplyListener extends JFrame implements ActionListene
 		noOfItemsLabel = new JLabel("Total Items:");
 			
 		productText = new JTextField();
-		noOfItemsText = new JTextField();
+		productText.setEditable(false);
+		final JTextField noOfItemsText = new JTextField();
 		noOfItemsText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -83,6 +84,8 @@ public class AddNewProductSupplyListener extends JFrame implements ActionListene
 				}
 				
 				listener.reloadProductSupplyData();
+				productText.setText("");
+				noOfItemsText.setText("");
 				dispose();
 			}
 		});
