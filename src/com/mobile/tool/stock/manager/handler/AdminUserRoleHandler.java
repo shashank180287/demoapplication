@@ -34,7 +34,8 @@ public class AdminUserRoleHandler implements UserRoleHandler{
 	@Override
 	public void addTabs(JTabbedPane tabbedPane, UserLoginDetails userLoginDetails) {
 		tabbedPane.addTab("Stock Management", new StockManagementTab(UserRoleDefine.ADMIN).build(userLoginDetails));
-		tabbedPane.addTab("Dashboard", new StockDashboardTab().build());
+		//tabbedPane.addTab("Dashboard", new StockDashboardTab().build());
+		tabbedPane.addTab("Human Resource Management", new HumanResourceTab().build(userLoginDetails));
 	}
 
 	@Override
