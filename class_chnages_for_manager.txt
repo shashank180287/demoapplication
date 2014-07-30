@@ -1,0 +1,106 @@
+AdminUserRoleHandler.java
+@37 update		
+tabbedPane.addTab("Human Resource Management", new HumanResourceTab().build());
+
+
+EmployeeUserRoleHandler.java
+@39
+
+		if(EmployeeRecordsRepository.isUserManager(userLoginDetails.getUsername())){
+			tabbedPane.addTab("Human Resource Management", new HumanResourceTab().build(userLoginDetails));
+		}
+		
+
+StockManagementTab.java
+@244
+
+			if(EmployeeRecordsRepository.isUserManager(userLoginDetails.getUsername())){
+				//
+				parent = new DefaultMutableTreeNode("Supervisee");
+				root.add(parent);
+				parent.add(new DefaultMutableTreeNode("Supervisee List"));
+				parent.add(new DefaultMutableTreeNode("Supervisee Sales"));
+			}
+			
+EmployeeRecordsRepository.java
+@152
+	public static List<EmployeeRecord> getEmployeeRecordsByManagerCode(String managerCode) {
+		String query = "SELECT * FROM EMPLOYEES_RECORDS WHERE manager_code ='" + managerCode + "'";
+		return getEmployeeRecordByQuery(query);
+	}
+
+	public static List<EmployeeRecord> getEmployeeRecordsByManagerUserName(String managerUsername) {
+		EmployeeRecord manager = getEmployeeRecordByUsername(managerUsername);
+		if(manager!=null){
+			return getEmployeeRecordsByManagerCode(manager.getEmployeeCode());
+		}
+		return new ArrayList<EmployeeRecord>();
+	}
+	
+	public static boolean isUserManager(String username) {
+		List<EmployeeRecord> supervisee = getEmployeeRecordsByManagerUserName(username);
+		if(supervisee!=null && supervisee.size()>0)
+			return true;
+		return false;
+	}
+	
+	
+EmployeeDetailsOptionHandler.java
+@24
+
+	public static void handleEmployeeDetailsOptionSelectionForManager(
+			StockManagementTableModel tableModel, String managerUsername) {
+		tableModel.refreshTableData(EmployeeRecord.getTableModel(
+				EmployeeRecordsRepository.getEmployeeRecordsByManagerUserName(managerUsername)), 
+				EmployeeRecord.tableColumnNames);
+	}
+	
+	
+SalesHistoryOptionHandler.java
+@37
+	public static void handleSalesHistoryOptionSelectionForManager(
+			StockManagementTableModel tableModel,
+			String managerUsername) {
+		tableModel.refreshTableData(SalesRecord.getTableModel(
+				SaleRecordsRepository.getSaleRecordForManagerSupervisee(managerUsername)), 
+				SalesRecord.tableColumnNames);
+	}
+	
+	
+SaleRecordsRepository.java
+@193
+	public static List<SalesRecord> getSaleRecordForManagerSupervisee(
+			String managerUsername) {
+		List<SalesRecord> salesRecord = new ArrayList<SalesRecord>();
+		List<EmployeeRecord> superviseeList = EmployeeRecordsRepository.getEmployeeRecordsByManagerUserName(managerUsername);
+		for (EmployeeRecord employeeRecord : superviseeList) {
+			salesRecord.addAll(getSaleRecordForEmployee(employeeRecord.getEmployeeCode()));
+		}
+		return salesRecord;
+	}
+
+
+EmployeeRoleMouseListener.java
+@75
+else if("Supervisee List".equalsIgnoreCase(tp.getLastPathComponent()
+				.toString())){
+			if(!"Supervisee List".equalsIgnoreCase(lastSelection)) {
+				EmployeeDetailsOptionHandler.handleEmployeeDetailsOptionSelectionForManager(tableModel, userLoginDetails.getUsername());
+				addButtonsInPanel("Update Supervisee", new VisitorEnquiryDetailListener(this));
+				this.lastSelection = "Supervisee List";
+			} 
+		} else if("Supervisee Sales".equalsIgnoreCase(tp.getLastPathComponent()
+				.toString())){
+			if(!"Supervisee Sales".equalsIgnoreCase(lastSelection)) {
+				SalesHistoryOptionHandler.handleSalesHistoryOptionSelectionForManager(tableModel, userLoginDetails.getUsername());
+				if (btnPnl != null) {
+					Component[] components = btnPnl.getComponents();
+					for (Component component : components) {
+						btnPnl.remove(component);
+					}
+				}
+				this.lastSelection = "Supervisee Sales";
+			} 
+		}
+
+
