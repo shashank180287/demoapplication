@@ -3,7 +3,6 @@ package com.mobile.tool.stock.manager.entity;
 import java.sql.Date;
 
 public class EmployeePayrollDetails {
-
 	private int id;
 	private EmployeeRecord employeeRecord;
 	private String department;
@@ -21,14 +20,15 @@ public class EmployeePayrollDetails {
 	private double allowances;
 	private double initialSalary;
 	private double upgradeSalary;
-	private double employmentType; //Full Time, Contract
+	private String employmentType; // Full Time, Contract
+
 	public EmployeePayrollDetails(int id, EmployeeRecord employeeRecord,
 			String department, double sickLeaves, double casualLeaves,
 			double annualLeaves, double studyLeaves, double other,
 			double daysOfLeaves, Date leaveStartDate, Date leaveEndDate,
 			String loanName, double intertestRate, String gradeLevel,
 			double allowances, double initialSalary, double upgradeSalary,
-			double employmentType) {
+			String employmentType) {
 		super();
 		this.id = id;
 		this.employeeRecord = employeeRecord;
@@ -49,114 +49,151 @@ public class EmployeePayrollDetails {
 		this.upgradeSalary = upgradeSalary;
 		this.employmentType = employmentType;
 	}
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public EmployeeRecord getEmployeeRecord() {
 		return employeeRecord;
 	}
+
 	public void setEmployeeRecord(EmployeeRecord employeeRecord) {
 		this.employeeRecord = employeeRecord;
 	}
+
 	public String getDepartment() {
 		return department;
 	}
+
 	public void setDepartment(String department) {
 		this.department = department;
 	}
+
 	public double getSickLeaves() {
 		return sickLeaves;
 	}
+
 	public void setSickLeaves(double sickLeaves) {
 		this.sickLeaves = sickLeaves;
 	}
+
 	public double getCasualLeaves() {
 		return casualLeaves;
 	}
+
 	public void setCasualLeaves(double casualLeaves) {
 		this.casualLeaves = casualLeaves;
 	}
+
 	public double getAnnualLeaves() {
 		return annualLeaves;
 	}
+
 	public void setAnnualLeaves(double annualLeaves) {
 		this.annualLeaves = annualLeaves;
 	}
+
 	public double getStudyLeaves() {
 		return studyLeaves;
 	}
+
 	public void setStudyLeaves(double studyLeaves) {
 		this.studyLeaves = studyLeaves;
 	}
+
 	public double getOther() {
 		return other;
 	}
+
 	public void setOther(double other) {
 		this.other = other;
 	}
+
 	public double getDaysOfLeaves() {
 		return daysOfLeaves;
 	}
+
 	public void setDaysOfLeaves(double daysOfLeaves) {
 		this.daysOfLeaves = daysOfLeaves;
 	}
+
 	public Date getLeaveStartDate() {
 		return leaveStartDate;
 	}
+
 	public void setLeaveStartDate(Date leaveStartDate) {
 		this.leaveStartDate = leaveStartDate;
 	}
+
 	public Date getLeaveEndDate() {
 		return leaveEndDate;
 	}
+
 	public void setLeaveEndDate(Date leaveEndDate) {
 		this.leaveEndDate = leaveEndDate;
 	}
+
 	public String getLoanName() {
 		return loanName;
 	}
+
 	public void setLoanName(String loanName) {
 		this.loanName = loanName;
 	}
+
 	public double getIntertestRate() {
 		return intertestRate;
 	}
+
 	public void setIntertestRate(double intertestRate) {
 		this.intertestRate = intertestRate;
 	}
+
 	public String getGradeLevel() {
 		return gradeLevel;
 	}
+
 	public void setGradeLevel(String gradeLevel) {
 		this.gradeLevel = gradeLevel;
 	}
+
 	public double getAllowances() {
 		return allowances;
 	}
+
 	public void setAllowances(double allowances) {
 		this.allowances = allowances;
 	}
+
 	public double getInitialSalary() {
 		return initialSalary;
 	}
+
 	public void setInitialSalary(double initialSalary) {
 		this.initialSalary = initialSalary;
 	}
+
 	public double getUpgradeSalary() {
 		return upgradeSalary;
 	}
+
 	public void setUpgradeSalary(double upgradeSalary) {
 		this.upgradeSalary = upgradeSalary;
 	}
-	public double getEmploymentType() {
+
+	public String getEmploymentType() {
 		return employmentType;
 	}
-	public void setEmploymentType(double employmentType) {
+
+	public void setEmploymentType(String employmentType) {
 		this.employmentType = employmentType;
 	}
+
 	@Override
 	public String toString() {
 		return "EmployeePayrollDetails [id=" + id + ", employeeRecord="
@@ -171,5 +208,4 @@ public class EmployeePayrollDetails {
 				+ ", initialSalary=" + initialSalary + ", upgradeSalary="
 				+ upgradeSalary + ", employmentType=" + employmentType + "]";
 	}
-
 }
