@@ -1,0 +1,110 @@
+HumanResourceTab.java
+@83
+
+Replace code to 
+	/**
+	 * Builds and returns a sample table.
+	 */
+	private JTable buildEmployeeTable(boolean isUserAdmin) {
+		String[][] tableData = new String[][]{};
+		final StockManagementTableModel tableModel = new StockManagementTableModel(tableData, new String[]{});
+		if(isUserAdmin){
+			EmployeeDetailsOptionHandler.handleEmployeeDetailsOptionSelectionForAdmin(tableModel);
+		} else {
+			EmployeeDetailsOptionHandler.handleEmployeeDetailsOptionSelectionForManager(tableModel, userLoginDetails.getUsername());
+		}
+		
+		final JTable table = new JTable(tableModel);
+		int tableFontSize = table.getFont().getSize();
+		int minimumRowHeight = tableFontSize + 6;
+		int defaultRowHeight = LookUtils.IS_LOW_RESOLUTION ? 17 : 18;
+		table.setRowHeight(Math.max(minimumRowHeight, defaultRowHeight));
+		table.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				if(row!=-1){
+					String employeeCode = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+					EmployeePayrollDetails employeePayrollDetails = EmployeePayrollDetailsRepository.getAllEmployeePayrollDetailsByEmployeeCode(employeeCode);
+					if(employeePayrollDetails!=null){
+						payrollTableModel.refreshTableData(EmployeePayrollDetails.getTableModel(employeePayrollDetails), EmployeePayrollDetails.attributeColumnNames);
+						for(Component component : btnPnl.getComponents()){
+							btnPnl.remove(component);
+						}
+						JButton updatePayrollButton = new JButton("Update Payroll");
+						updatePayrollButton.addActionListener(new UpdateEmployeePayrollDetailsListener(HumanResourceTab.this, employeePayrollDetails));
+						btnPnl.add(updatePayrollButton);
+						btnPnl.revalidate();
+						btnPnl.repaint();
+					}else{
+						payrollTableModel.refreshTableData(new String[][]{}, EmployeePayrollDetails.attributeColumnNames);
+						for(Component component : btnPnl.getComponents()){
+							btnPnl.remove(component);
+						}
+						JButton addPayrollButton = new JButton("Add Payroll");
+						addPayrollButton.addActionListener(new AddEmployeePayrollDetailsListener(HumanResourceTab.this, employeeCode));
+						btnPnl.add(addPayrollButton);
+						btnPnl.revalidate();
+						btnPnl.repaint();
+					}
+				}
+			}
+		});
+		return table;
+	}
+	
+	/**
+	 * Builds and returns a sample table.
+	 */
+	private JTable buildPayrollTable() {
+		payrollTableModel = new StockManagementTableModel(new String[][]{}, new String[]{"A", "B"});
+		JTable table = new JTable(payrollTableModel);
+		int tableFontSize = table.getFont().getSize();
+		int minimumRowHeight = tableFontSize + 6;
+		int defaultRowHeight = LookUtils.IS_LOW_RESOLUTION ? 17 : 18;
+		table.setRowHeight(Math.max(minimumRowHeight, defaultRowHeight));
+		return table;
+	}
+
+	public void reloadPayrollTableDataForEmployeeCode(String employeeCode) {
+		EmployeePayrollDetails employeePayrollDetails = EmployeePayrollDetailsRepository.getAllEmployeePayrollDetailsByEmployeeCode(employeeCode);
+		payrollTableModel.refreshTableData(EmployeePayrollDetails.getTableModel(employeePayrollDetails), EmployeePayrollDetails.attributeColumnNames);
+		for(Component component : btnPnl.getComponents()){
+			btnPnl.remove(component);
+		}
+		btnPnl.add(new JButton("Update Payroll"));
+		btnPnl.revalidate();
+		btnPnl.repaint();
+	}
+	
+	
+	
+EmployeePayrollDetails.java
+@25
+
+public static String[] attributeColumnNames = new String[]{"Attribute","Value"};
+
+@214
+	public static String[][] getTableModel(
+		EmployeePayrollDetails employeePayrollDetails) {
+		String[][] tableModelArray = new String[][] {
+				{"Department", employeePayrollDetails.getDepartment()},
+				{"Sick Leaves",	employeePayrollDetails.getSickLeaves()+""},
+				{"Casual Leaves", employeePayrollDetails.getCasualLeaves()+""},
+				{"Annual Leaves", employeePayrollDetails.getAnnualLeaves()+""},
+				{"Study Leaves", employeePayrollDetails.getStudyLeaves()+""},
+				{"Other", employeePayrollDetails.getOther()+""},
+				{"Days of Leaves", employeePayrollDetails.getDaysOfLeaves()+""},
+				{"Leaves Start Date", employeePayrollDetails.getLeaveStartDate().toString()},
+				{"Leaves End Date",	employeePayrollDetails.getLeaveEndDate().toString()},
+				{"Loan Name",	employeePayrollDetails.getLoanName()},
+				{"Interest Rate",	employeePayrollDetails.getIntertestRate()+""},
+				{"Grade Level",	employeePayrollDetails.getGradeLevel()},
+				{"Allowances",	employeePayrollDetails.getAllowances()+""},
+				{"Initial Salary",	employeePayrollDetails.getInitialSalary()+""},
+				{"Upgrade Salary",	employeePayrollDetails.getUpgradeSalary()+""},
+				{"Employment Type",	employeePayrollDetails.getEmploymentType()}
+			};
+		return tableModelArray;
+	}
