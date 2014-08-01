@@ -11,3 +11,120 @@ DatabaseInitialiser.java
 				+ "balance float,"
 				
 				
+
+SalesRecord.java 
+@24
+
+	public static String[] owerTableColumnNames = new String[]{"Sale Code", "Customer Name","Amount","Amount Paid","Amount Owing",
+		"Purchase Date"};
+
+@177
+
+	public static String[][] getTableModelForOwerList(List<SalesRecord> salesRecords) {
+		List<String[]> tableModel = new ArrayList<String[]>();
+		for (SalesRecord saleRecord : salesRecords) {
+			String[] customer = new String[]{saleRecord.getSalesCode(),
+					saleRecord.getCustomer().getFirstName()+" "+saleRecord.getCustomer().getLastName(), 
+					saleRecord.getSalesAmount()+"", saleRecord.getAmountPaid()+"", 
+					saleRecord.getBalance()+"", saleRecord.getCreated().toString()};
+			tableModel.add(customer);
+		}
+		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
+		return tableModelArray;
+	}
+	
+SaleRecordsRepository.java
+@206
+
+	public static List<SalesRecord> getSaleRecordWhereCompanyOweMoney() {
+		return getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE balance<0 ORDER BY created desc");
+	}
+
+	public static void clearBalanceBySaleCode(String saleCode) {
+		String query = "UPDATE SALES_RECORDS SET amount_paid = sales_amount, balance=0 WHERE sales_code='"+saleCode+"'";
+		jdbcTemplate.executeUpdate(query);
+	}
+	
+	
+StockManagementTab.java
+@125 (update)
+			tree.addMouseListener(new EmployeeRoleMouseListener(tree,
+					(StockManagementTableModel) tableModel, userLoginDetails, table).addButtonPanel(btnPnl));
+					
+@204
+
+	parent.add(new DefaultMutableTreeNode("Ower List"));
+	
+@240
+
+	parent.add(new DefaultMutableTreeNode("Ower List"));
+	
+SalesHistoryOptionHandler.java	
+@45
+
+	public static void handleOwerListOptionSelectionForAdmin(
+			StockManagementTableModel tableModel) {
+		tableModel.refreshTableData(SalesRecord.getTableModelForOwerList(
+				SaleRecordsRepository.getSaleRecordWhereCompanyOweMoney()), 
+				SalesRecord.owerTableColumnNames);
+	}
+	
+
+AdminRoleMouseListener.java
+@269
+	else if("Ower List".equalsIgnoreCase(tp.getLastPathComponent()
+				.toString())){
+			if(!"Ower List".equalsIgnoreCase(lastSelection)) {
+				SalesHistoryOptionHandler.handleOwerListOptionSelectionForAdmin(
+						tableModel);
+				addButtonsInPanel("Clear Balance", new ClearSalesBalanceListener(table, tableModel, this));
+				this.lastSelection = "Ower List";
+			} 
+		}
+			
+@331
+
+	public void reloadOwerListDetailTableData() {
+		SalesHistoryOptionHandler.handleOwerListOptionSelectionForAdmin(tableModel);	
+	}
+	
+	
+EmployeeRoleMouseListener.java
+@28 (replace)
+
+	private JTable table;
+	
+	public EmployeeRoleMouseListener() {
+	}
+
+	public EmployeeRoleMouseListener(JTree tree,
+			StockManagementTableModel tableModel,
+			UserLoginDetails userLoginDetails,
+			JTable table) {
+		super();
+		this.tree = tree;
+		this.tableModel = tableModel;
+		this.userLoginDetails = userLoginDetails;
+		this.table = table;
+	}
+	
+@99
+
+	else if("Ower List".equalsIgnoreCase(tp.getLastPathComponent()
+				.toString())){
+			if(!"Ower List".equalsIgnoreCase(lastSelection)) {
+				SalesHistoryOptionHandler.handleOwerListOptionSelectionForAdmin(
+						tableModel);
+				addButtonsInPanel("Clear Balance", new ClearSalesBalanceListener(table, tableModel, this));
+				this.lastSelection = "Ower List";
+			} 
+		}
+	
+@143
+	public void reloadOwerListDetailTableData() {
+		SalesHistoryOptionHandler.handleOwerListOptionSelectionForAdmin(tableModel);	
+	}
+	
+	
+	
