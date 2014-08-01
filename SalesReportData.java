@@ -52,7 +52,8 @@ public class SalesReportData extends DynamicReportData{
 	    report.addGroup("created");
 	    report.addSubtotal("noOfItems");
 	    report.addSubtotal("salesPrice");
-	    report.addSubtotal("confirmPrice");
+	    report.addSubtotal("amountPaid");
+	    report.addSubtotal("balance");
 	    report.setShowPageNumber(true);
 	    return report;
 	}
