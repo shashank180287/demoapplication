@@ -11,8 +11,8 @@ public class EmployeeRecord {
 	private String lastname;
 	private long mobilenumber;
 	private String gender;
-	private String qualification;
-	private String profession;
+	private String stateOfOrigin;
+	private String localGovt;
 	private int age;
 	private String maritalStatus;
 	private String jobDescription;
@@ -21,12 +21,15 @@ public class EmployeeRecord {
 	private Date employeed;
 	private String jobTitle;
 	private String contactAddress;
+	private String religion;
+	private String idProofDocName;
+	private String idProofDocNo;
 	private UserLoginDetails userLoginDetail;
 	private String reference1;
 	private String reference2;
 	private String reference3;
 	public static String[] tableColumnNames = new String[]{"Employee Code","First Name","Last Name","Mobile Number",
-		"Email", "Gender", "Contact Address", "Employeed", "Job Title", "Manager", "Username"};
+		"Email", "Gender", "Religion", "Contact Address", "Employeed", "Job Title", "Manager", "Username"};
 	public static String[] attributeColumnNames = new String[]{"Attribute Name","Attribute Value"};
 	
 	public EmployeeRecord() {
@@ -34,20 +37,20 @@ public class EmployeeRecord {
 
 	public EmployeeRecord(String employeeCode, String firstname,
 			String lastname, long mobilenumber, String gender,
-			String qualification, String profession, int age,
+			String stateOfOrigin, String localGovt, int age,
 			String maritalStatus, String jobDescription,
 			EmployeeRecord manager, String email, Date employeed,
 			String jobTitle, String contactAddress,
 			UserLoginDetails userLoginDetail, String reference1,
-			String reference2, String reference3) {
+			String reference2, String reference3, String religion, String idProofDocName, String idProofDocNo) {
 		super();
 		this.employeeCode = employeeCode;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.mobilenumber = mobilenumber;
 		this.gender = gender;
-		this.qualification = qualification;
-		this.profession = profession;
+		this.stateOfOrigin = stateOfOrigin;
+		this.localGovt = localGovt;
 		this.age = age;
 		this.maritalStatus = maritalStatus;
 		this.jobDescription = jobDescription;
@@ -60,6 +63,9 @@ public class EmployeeRecord {
 		this.reference1 = reference1;
 		this.reference2 = reference2;
 		this.reference3 = reference3;
+		this.religion = religion;
+		this.idProofDocName = idProofDocName;
+		this.idProofDocNo = idProofDocNo;
 	}
 
 	public String getEmployeeCode() {
@@ -102,20 +108,20 @@ public class EmployeeRecord {
 		this.gender = gender;
 	}
 
-	public String getQualification() {
-		return qualification;
+	public String getStateOfOrigin() {
+		return stateOfOrigin;
 	}
 
-	public void setQualification(String qualification) {
-		this.qualification = qualification;
+	public void setStateOfOrigin(String stateOfOrigin) {
+		this.stateOfOrigin = stateOfOrigin;
 	}
 
-	public String getProfession() {
-		return profession;
+	public String getLocalGovt() {
+		return localGovt;
 	}
 
-	public void setProfession(String profession) {
-		this.profession = profession;
+	public void setLocalGovt(String localGovt) {
+		this.localGovt = localGovt;
 	}
 
 	public int getAge() {
@@ -214,16 +220,43 @@ public class EmployeeRecord {
 		this.reference3 = reference3;
 	}
 
+	public String getReligion() {
+		return religion;
+	}
+
+	public void setReligion(String religion) {
+		this.religion = religion;
+	}
+
+	public String getIdProofDocName() {
+		return idProofDocName;
+	}
+
+	public void setIdProofDocName(String idProofDocName) {
+		this.idProofDocName = idProofDocName;
+	}
+
+	public String getIdProofDocNo() {
+		return idProofDocNo;
+	}
+
+	public void setIdProofDocNo(String idProofDocNo) {
+		this.idProofDocNo = idProofDocNo;
+	}
+
+
 	@Override
 	public String toString() {
 		return "EmployeeRecord [employeeCode=" + employeeCode + ", firstname="
 				+ firstname + ", lastname=" + lastname + ", mobilenumber="
-				+ mobilenumber + ", gender=" + gender + ", qualification="
-				+ qualification + ", profession=" + profession + ", age=" + age
+				+ mobilenumber + ", gender=" + gender + ", stateOfOrigin="
+				+ stateOfOrigin + ", localGovt=" + localGovt + ", age=" + age
 				+ ", maritalStatus=" + maritalStatus + ", jobDescription="
 				+ jobDescription + ", manager=" + manager + ", email=" + email
 				+ ", employeed=" + employeed + ", jobTitle=" + jobTitle
-				+ ", contactAddress=" + contactAddress + ", userLoginDetail="
+				+ ", contactAddress=" + contactAddress + ", religion="
+				+ religion + ", idProofDocName=" + idProofDocName
+				+ ", idProofDocNo=" + idProofDocNo + ", userLoginDetail="
 				+ userLoginDetail + ", reference1=" + reference1
 				+ ", reference2=" + reference2 + ", reference3=" + reference3
 				+ "]";
@@ -233,7 +266,7 @@ public class EmployeeRecord {
 		List<String[]> tableModel = new ArrayList<>();
 		for (EmployeeRecord employeeRecord : employeeRecords) {
 			String[] customer = new String[]{employeeRecord.getEmployeeCode(), employeeRecord.getFirstname(), employeeRecord.getLastname(), 
-					employeeRecord.getMobilenumber()+"", employeeRecord.getEmail(), employeeRecord.getGender(), employeeRecord.getContactAddress(), 
+					employeeRecord.getMobilenumber()+"", employeeRecord.getEmail(), employeeRecord.getGender(), employeeRecord.getReligion(), employeeRecord.getContactAddress(), 
 					employeeRecord.getEmployeed().toString(), employeeRecord.getJobTitle(), (employeeRecord.getManager()!=null?employeeRecord.getManager().getFirstname()+" "+
 					employeeRecord.getManager().getLastname():""), employeeRecord.getUserLoginDetail()!=null?employeeRecord.getUserLoginDetail().getUsername():""};
 			tableModel.add(customer);
@@ -248,7 +281,7 @@ public class EmployeeRecord {
 				 {"Name", employeeRecordByUsername.getFirstname() +" "+ employeeRecordByUsername.getLastname()},
 				 {"MobileNumber", employeeRecordByUsername.getMobilenumber()+""} , 
 				 {"Gender", employeeRecordByUsername.getGender()},
-				 {"Qualification", employeeRecordByUsername.getQualification()},
+				 {"stateOfOrigin", employeeRecordByUsername.getStateOfOrigin()},
 				 {"Age",  employeeRecordByUsername.getAge()+""},
 				 {"Marital Status",  employeeRecordByUsername.getMaritalStatus()},
 				 {"Manager",  (employeeRecordByUsername.getManager()!=null)?employeeRecordByUsername.getManager().getFirstname()+" "+ employeeRecordByUsername.getManager().getLastname():""},

@@ -1,7 +1,11 @@
 package com.mobile.tool.stock.manager.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VendorCategory {
 
+	public static String[] tableColumnNames={"Id", "Category Name", "Category Description"};
 	private int vendorCategoryId;
 	private String vendorCategoryName;
 	private String vendorCategoryDesc;
@@ -41,6 +45,18 @@ public class VendorCategory {
 		return "VendorCategory [vendorCategoryId=" + vendorCategoryId
 				+ ", vendorCategoryName=" + vendorCategoryName
 				+ ", vendorCategoryDesc=" + vendorCategoryDesc + "]";
+	}
+
+	public static String[][] getTableModel(
+			List<VendorCategory> allVendorCategories) {
+		List<String[]> tableModel = new ArrayList<String[]>();
+		for (VendorCategory vendorCategory : allVendorCategories) {
+			String[] userLogin = new String[]{vendorCategory.getVendorCategoryId()+"", vendorCategory.getVendorCategoryName(), vendorCategory.getVendorCategoryDesc()};
+			tableModel.add(userLogin);
+		}
+		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
+		return tableModelArray;
 	}
 
 }

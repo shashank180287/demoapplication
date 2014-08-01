@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mobile.tool.stock.manager.entity.VendorCategory;
 import com.mobile.tool.stock.manager.repository.VendorCategoryRepository;
+import com.mobile.tool.stock.manager.ui.listener.adder.AddNewVendorRecordListener;
+import com.mobile.tool.stock.manager.ui.listener.updater.UpdateVendorRecordListener;
 
 public class SearchVendorCategoryButtonListener extends JFrame implements
 		ActionListener {
@@ -29,10 +31,15 @@ public class SearchVendorCategoryButtonListener extends JFrame implements
 	String searchCategoryColumns[] = {"Category Name", "Description"};
 	private List<VendorCategory> categoryRecords;
 	
-	private final AddNewVendorRecordListener listener;
+	private AddNewVendorRecordListener addListener;
+	private UpdateVendorRecordListener updateListener;
 	
 	public SearchVendorCategoryButtonListener(AddNewVendorRecordListener listener) {
-		this.listener = listener;
+		this.addListener = listener;
+	}
+	
+	public SearchVendorCategoryButtonListener(UpdateVendorRecordListener listener) {
+		this.updateListener = listener;
 	}
 	
 	public void createAndShowGUI() {
@@ -55,7 +62,10 @@ public class SearchVendorCategoryButtonListener extends JFrame implements
 		        Point p = me.getPoint();
 		        int row = table.rowAtPoint(p);
 		        if (me.getClickCount() == 2 && categoryRecords!=null && categoryRecords.size()>=row) {
-		            listener.setVendorCategoryText(categoryRecords.get(row).getVendorCategoryName());
+		        	if(addListener!=null)
+		        		addListener.setVendorCategoryText(categoryRecords.get(row).getVendorCategoryName());
+		        	else
+		        		updateListener.setVendorCategoryText(categoryRecords.get(row).getVendorCategoryName());
 		            closeWindow();
 		        }
 		    }

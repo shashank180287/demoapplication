@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mobile.tool.stock.manager.entity.VendorRecord;
 import com.mobile.tool.stock.manager.repository.VendorRecordRepository;
+import com.mobile.tool.stock.manager.ui.listener.adder.AddNewProductRecordListener;
+import com.mobile.tool.stock.manager.ui.listener.updater.UpdateProductRecordListener;
 
 public class SearchVendorButtonListener extends JFrame implements
 		ActionListener {
@@ -29,10 +31,15 @@ public class SearchVendorButtonListener extends JFrame implements
 	String searchVendorColumns[] = {"Code", "Name", "Mobile Number", "Email"};
 	private List<VendorRecord> vendorRecords;
 	
-	private final AddNewProductRecordListener listener;
+	private AddNewProductRecordListener addListener;
+	private UpdateProductRecordListener updateListener;
 	
 	public SearchVendorButtonListener(AddNewProductRecordListener listener) {
-		this.listener = listener;
+		this.addListener = listener;
+	}
+	
+	public SearchVendorButtonListener(UpdateProductRecordListener listener) {
+		this.updateListener = listener;
 	}
 	
 	public void createAndShowGUI() {
@@ -55,7 +62,10 @@ public class SearchVendorButtonListener extends JFrame implements
 		        Point p = me.getPoint();
 		        int row = table.rowAtPoint(p);
 		        if (me.getClickCount() == 2 && vendorRecords!=null && vendorRecords.size()>=row) {
-		            listener.setVendorText(vendorRecords.get(row).getVendorCode());
+		            if(addListener!=null)
+		            	addListener.setVendorText(vendorRecords.get(row).getVendorCode());
+		            else
+		            	updateListener.setVendorText(vendorRecords.get(row).getVendorCode());
 		            closeWindow();
 		        }
 		    }

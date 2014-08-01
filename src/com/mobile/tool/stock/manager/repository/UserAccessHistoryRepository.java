@@ -33,7 +33,7 @@ public class UserAccessHistoryRepository {
 	}
 
 	public static void addUserAccessHistory(UserAccessHistory userAccessHistory) {
-		String query = "INSERT INTO USER_ACCESS_HISTORY VALUES ("+getCurrentIdCursor()+1+"'"+userAccessHistory.getUser().getUsername()+",'"+userAccessHistory.getStartTime()+"','"+userAccessHistory.getEndTime()+"')";
+		String query = "INSERT INTO USER_ACCESS_HISTORY VALUES ("+(getCurrentIdCursor()+1)+"'"+userAccessHistory.getUser().getUsername()+",'"+userAccessHistory.getStartTime()+"','"+userAccessHistory.getEndTime()+"')";
 		jdbcTemplate.executeUpdate(query);
 	}
 

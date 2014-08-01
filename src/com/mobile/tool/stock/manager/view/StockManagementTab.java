@@ -194,13 +194,18 @@ public class StockManagementTab {
 
 		switch (userRoleDefine) {
 		case ADMIN: {
+			parent = new DefaultMutableTreeNode("Categories");
+			root.add(parent);
+			parent.add(new DefaultMutableTreeNode("Vendor Category"));
+			parent.add(new DefaultMutableTreeNode("Product Category"));
+			//
 			parent = new DefaultMutableTreeNode("Accounts");
 			root.add(parent);
 			parent.add(new DefaultMutableTreeNode("Customer List"));
 			parent.add(new DefaultMutableTreeNode("Employee List"));
 			parent.add(new DefaultMutableTreeNode("Vendor List"));
 			parent.add(new DefaultMutableTreeNode("Product List"));
-			parent.add(new DefaultMutableTreeNode("Product Order"));
+			parent.add(new DefaultMutableTreeNode("Stock List"));
 			//
 			parent = new DefaultMutableTreeNode("Transaction");
 			root.add(parent);
@@ -209,10 +214,15 @@ public class StockManagementTab {
 			parent.add(new DefaultMutableTreeNode("Sales Reports"));
 			parent.add(new DefaultMutableTreeNode("Account Sheet"));
 			//
+			parent = new DefaultMutableTreeNode("Enquiry");
+			root.add(parent);
+			parent.add(new DefaultMutableTreeNode("Visitor Enquiry"));
+			//
 			parent = new DefaultMutableTreeNode("Manage");
 			root.add(parent);
 			parent.add(new DefaultMutableTreeNode("Manage User"));
 			parent.add(new DefaultMutableTreeNode("Manage Records"));
+			parent.add(new DefaultMutableTreeNode("Manage Stock"));
 			selectionPath = new TreePath(((DefaultMutableTreeNode)salesHistory).getPath());
 		}
 			break;
@@ -231,6 +241,17 @@ public class StockManagementTab {
 			MutableTreeNode personDetails = new DefaultMutableTreeNode("Personal Details");
 			parent.add(personDetails);
 			parent.add(new DefaultMutableTreeNode("Sales History"));
+			//
+			parent = new DefaultMutableTreeNode("Enquiry");
+			root.add(parent);
+			parent.add(new DefaultMutableTreeNode("Visitor Enquiry"));
+			if(EmployeeRecordsRepository.isUserManager(userLoginDetails.getUsername())){
+				//
+				parent = new DefaultMutableTreeNode("Supervisee");
+				root.add(parent);
+				parent.add(new DefaultMutableTreeNode("Supervisee List"));
+				parent.add(new DefaultMutableTreeNode("Supervisee Sales"));
+			}
 			selectionPath = new TreePath(((DefaultMutableTreeNode)personDetails).getPath());
 		}
 			break;

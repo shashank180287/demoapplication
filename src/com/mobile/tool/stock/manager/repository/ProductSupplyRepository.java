@@ -3,59 +3,52 @@ package com.mobile.tool.stock.manager.repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.mobile.tool.stock.manager.entity.ProductRecord;
 import com.mobile.tool.stock.manager.entity.ProductSupply;
 
 public class ProductSupplyRepository {
 
-	private static JdbcTemplate jdbcTemplate = JdbcTemplate.getDerbyJdbcTemplate();
+	private static JdbcTemplate jdbcTemplate = JdbcTemplate
+			.getDerbyJdbcTemplate();
 
-	public static void addProductSupply(ProductSupply productSupply) {
-		String query = "INSERT INTO PRODUCT_SUPPLY VALUES ('"+productSupply.getProduct().getProductCode()+System.currentTimeMillis()+"','"+productSupply.getProduct().getProductCode()+"',"
-				+productSupply.getTotalItems() +","+ productSupply.getTotalSupplied()+"," + productSupply.getCurrentStock() +","+ productSupply.getCurrentItemCount()+")";
+	public static ProductSupply addProductSupply(ProductSupply productSupply) {
+		String supplyCode = getProductSupplyCode(productSupply);
+		String query = "INSERT INTO PRODUCT_SUPPLY VALUES ('"
+				+ supplyCode + "','"
+				+ productSupply.getSupplyDate()+"','"
+				+ productSupply.getSupplyDetails() + "','"
+				+ productSupply.getSupplier() + "')";
 		jdbcTemplate.executeUpdate(query);
+		productSupply.setSupplyCode(supplyCode);
+		return productSupply;
 	}
 
-	public static void updateProductSupply(ProductSupply productSupply) {
-		if(productSupply.getSupplyCode()==null)
-			throw new IllegalArgumentException("Supply code can not be null");
-
-		String query = "UPDATE PRODUCT_SUPPLY SET total_items="+productSupply.getTotalItems()+",total_supplied="
-				+productSupply.getTotalSupplied()+", current_stock="+productSupply.getCurrentStock()+",current_item_count="
-				+productSupply.getCurrentItemCount()+" WHERE supply_code='"+productSupply.getSupplyCode()+"'";
-		jdbcTemplate.executeUpdate(query);
-	}
-
-	public static void removeProductSupply(ProductSupply productSupply) {
-		if(productSupply.getSupplyCode()==null)
-			throw new IllegalArgumentException("Supply code can not be null");
-
-		String query = "DELETE PRODUCT_SUPPLY WHERE supply_code='"+productSupply.getSupplyCode()+"'";
-		jdbcTemplate.executeUpdate(query);	
+	private static String getProductSupplyCode(ProductSupply productSupply) {
+		return (productSupply.getSupplier() != null ? (productSupply
+				.getSupplier().length() > 2 ? productSupply.getSupplier()
+				.substring(0, 3).toUpperCase() : productSupply.getSupplier()
+				.toUpperCase()) : "ABC")
+				+ System.currentTimeMillis();
 	}
 
 	public static List<ProductSupply> getProductSupplyByQuery(String query) {
 		List<ProductSupply> productSupply = new ArrayList<ProductSupply>();
 		ResultSet productSupplyInDb = null;
-		try{
+		try {
 			productSupplyInDb = jdbcTemplate.executeQuery(query);
-			while(productSupplyInDb.next()){
-				String productCode = productSupplyInDb.getString("product_code");
-				ProductRecord productRecord = ProductRecordRepository.getProductRecordByCode(productCode);
-				productSupply.add(new ProductSupply(productSupplyInDb.getString("supply_code"), productRecord, 
-						productSupplyInDb.getInt("total_items"),
-						productSupplyInDb.getInt("total_supplied"),
-						productSupplyInDb.getInt("current_stock"),
-						productSupplyInDb.getInt("current_item_count")));
+			while (productSupplyInDb.next()) {
+				ProductSupply prSupply = new ProductSupply(productSupplyInDb.getString("supply_code"),
+						productSupplyInDb.getDate("supply_date"),
+						productSupplyInDb.getString("supply_description"),
+						productSupplyInDb.getString("supplier"));
+				prSupply.setProductSupplyDetails(ProductSupplyDetailsRepository.getProductSupplyDetailsForParticularSupply(prSupply));
+				productSupply.add(prSupply);
 			}
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally{
-			if(productSupplyInDb!=null)
+		} finally {
+			if (productSupplyInDb != null)
 				try {
 					productSupplyInDb.close();
 				} catch (SQLException e) {
@@ -70,30 +63,9 @@ public class ProductSupplyRepository {
 		return getProductSupplyByQuery(query);
 	}
 
-	public static ProductSupply getProductSupplyByProductCode(String productCode) {
-		List<ProductSupply> productSupplyList = getProductSupplyByQuery("SELECT * FROM PRODUCT_SUPPLY WHERE product_code='"+productCode+"'");
-		return productSupplyList.size()>0?productSupplyList.get(0):null;
-	}
-	
-	public static Map<String, Double> getProductLiabilities() {
-		Map<String, Double> liabilities = new HashMap<>();
-		ResultSet productSupplyInDb = null;
-		try{
-			productSupplyInDb = jdbcTemplate.executeQuery("Select ps.product_code, sum(pr.bulk_price*ps.total_items) from product_supply ps,"+
-									"product_record pr where pr.product_code=ps.product_code group by ps.product_code");
-			while(productSupplyInDb.next()){
-				liabilities.put(productSupplyInDb.getString("product_code"), productSupplyInDb.getDouble("sum"));
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-		} finally{
-			if(productSupplyInDb!=null)
-				try {
-					productSupplyInDb.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}
-		return liabilities;
+	public static ProductSupply getProductSupplyBySupplyCode(String supplyCode) {
+		String query = "SELECT * FROM PRODUCT_SUPPLY where supply_code='"+supplyCode+"'";
+		List<ProductSupply> productSupplies =  getProductSupplyByQuery(query);
+		return (productSupplies!=null && productSupplies.size()>0)?productSupplies.get(0):null;
 	}
 }

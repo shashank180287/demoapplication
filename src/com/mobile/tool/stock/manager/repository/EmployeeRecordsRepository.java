@@ -13,12 +13,13 @@ public class EmployeeRecordsRepository {
 	private static JdbcTemplate jdbcTemplate = JdbcTemplate
 			.getDerbyJdbcTemplate();
 
-	public static void addNewEmployeeRecord(EmployeeRecord employeeRecord) {
+	public static String addNewEmployeeRecord(EmployeeRecord employeeRecord) {
+		String employeeCode =getFirstThreeLetter(employeeRecord.getFirstname()
+				.toUpperCase())
+				+ getFirstThreeLetter(employeeRecord.getLastname()
+						.toUpperCase()) + getRandomNo();
 		String query = "INSERT INTO EMPLOYEES_RECORDS VALUES ('"
-				+ (getFirstThreeLetter(employeeRecord.getFirstname()
-						.toUpperCase())
-						+ getFirstThreeLetter(employeeRecord.getLastname()
-								.toUpperCase()) + getRandomNo())
+				+ (employeeCode)
 				+ "','"
 				+ employeeRecord.getFirstname()
 				+ "','"
@@ -28,9 +29,9 @@ public class EmployeeRecordsRepository {
 				+ ",'"
 				+ employeeRecord.getGender()
 				+ "','"
-				+ employeeRecord.getQualification()
+				+ employeeRecord.getStateOfOrigin()
 				+ "','"
-				+ employeeRecord.getProfession()
+				+ employeeRecord.getLocalGovt()
 				+ "',"
 				+ employeeRecord.getAge()
 				+ ",'"
@@ -47,6 +48,12 @@ public class EmployeeRecordsRepository {
 				+ employeeRecord.getJobTitle()
 				+ "','"
 				+ employeeRecord.getContactAddress()
+				+ "','"
+				+ employeeRecord.getReligion()
+				+ "','"
+				+ employeeRecord.getIdProofDocName()
+				+ "','"
+				+ employeeRecord.getIdProofDocNo()
 				+ "',"
 				+ (employeeRecord.getUserLoginDetail() != null ? "'"
 						+ employeeRecord.getUserLoginDetail().getUsername()
@@ -61,6 +68,7 @@ public class EmployeeRecordsRepository {
 				+ (employeeRecord.getReference3() != null ? "'"
 						+ employeeRecord.getReference3() + "'" : "NULL") + ")";
 		jdbcTemplate.executeUpdate(query);
+		return employeeCode;
 	}
 
 	public static List<EmployeeRecord> getEmployeeRecordByQuery(String query) {
@@ -82,8 +90,8 @@ public class EmployeeRecordsRepository {
 						.getString("last_name"), employeeRecordInDb
 						.getLong("mobile_number"), employeeRecordInDb
 						.getString("gender"), employeeRecordInDb
-						.getString("qualification"), employeeRecordInDb
-						.getString("profession"), employeeRecordInDb
+						.getString("state_of_origin"), employeeRecordInDb
+						.getString("local_govt"), employeeRecordInDb
 						.getInt("age"), employeeRecordInDb
 						.getString("marital_status"), employeeRecordInDb
 						.getString("job_description"), manager,
@@ -94,7 +102,10 @@ public class EmployeeRecordsRepository {
 						userLoginDetails, employeeRecordInDb
 								.getString("reference_1"), employeeRecordInDb
 								.getString("reference_2"), employeeRecordInDb
-								.getString("reference_3")));
+								.getString("reference_3"), employeeRecordInDb
+								.getString("religion"), employeeRecordInDb
+								.getString("id_proof_doc_name"), employeeRecordInDb
+								.getString("id_proof_doc_no")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -147,5 +158,25 @@ public class EmployeeRecordsRepository {
 					+ employeeRecord.getEmployeeCode() + "'";
 			jdbcTemplate.executeUpdate(query);
 		}
+	}
+	
+	public static List<EmployeeRecord> getEmployeeRecordsByManagerCode(String managerCode) {
+		String query = "SELECT * FROM EMPLOYEES_RECORDS WHERE manager_code ='" + managerCode + "'";
+		return getEmployeeRecordByQuery(query);
+	}
+
+	public static List<EmployeeRecord> getEmployeeRecordsByManagerUserName(String managerUsername) {
+		EmployeeRecord manager = getEmployeeRecordByUsername(managerUsername);
+		if(manager!=null){
+			return getEmployeeRecordsByManagerCode(manager.getEmployeeCode());
+		}
+		return new ArrayList<EmployeeRecord>();
+	}
+
+	public static boolean isUserManager(String username) {
+		List<EmployeeRecord> supervisee = getEmployeeRecordsByManagerUserName(username);
+		if(supervisee!=null && supervisee.size()>0)
+			return true;
+		return false;
 	}
 }

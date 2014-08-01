@@ -188,4 +188,13 @@ public class SaleRecordsRepository {
 		return equities;
 	}
 
+	public static List<SalesRecord> getSaleRecordForManagerSupervisee(
+			String managerUsername) {
+		List<SalesRecord> salesRecord = new ArrayList<SalesRecord>();
+		List<EmployeeRecord> superviseeList = EmployeeRecordsRepository.getEmployeeRecordsByManagerUserName(managerUsername);
+		for (EmployeeRecord employeeRecord : superviseeList) {
+			salesRecord.addAll(getSaleRecordForEmployee(employeeRecord.getEmployeeCode()));
+		}
+		return salesRecord;
+	}
 }

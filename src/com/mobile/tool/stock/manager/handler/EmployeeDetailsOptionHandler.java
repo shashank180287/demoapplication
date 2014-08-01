@@ -20,4 +20,11 @@ public class EmployeeDetailsOptionHandler {
 				EmployeeRecordsRepository.getAllEmployeeRecords()), 
 				EmployeeRecord.tableColumnNames);
 	}
+	
+	public static void handleEmployeeDetailsOptionSelectionForManager(
+			StockManagementTableModel tableModel, String managerUsername) {
+		tableModel.refreshTableData(EmployeeRecord.getTableModel(
+				EmployeeRecordsRepository.getEmployeeRecordsByManagerUserName(managerUsername)), 
+				EmployeeRecord.tableColumnNames);
+	}
 }

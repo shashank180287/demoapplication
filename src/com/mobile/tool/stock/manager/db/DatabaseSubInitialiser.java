@@ -29,17 +29,22 @@ public class DatabaseSubInitialiser {
 	}
 
 	private void initialiseSubStaticDataInDB(Connection conn) throws SQLException {
-		PreparedStatement psInsert = conn.prepareStatement("INSERT INTO EMPLOYEES_RECORDS VALUES ('SHAAGR123', 'Shashank', 'Agrawal', 1234567890, 'Male', NULL, NULL, 27, 'Married', NULL, NULL, 'shashank180287@gmail.com', CURRENT_DATE, NULL, NULL, 'employee1', NULL, NULL, NULL)");
+		PreparedStatement psInsert = conn.prepareStatement("INSERT INTO EMPLOYEES_RECORDS VALUES ('SHAAGR123', 'Shashank', 'Agrawal', 1234567890, 'Male', NULL, NULL, 27, 'Married', NULL, NULL, 'shashank180287@gmail.com', CURRENT_DATE, NULL, NULL, NULL, NULL, NULL, 'employee1', NULL, NULL, NULL)");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO EMPLOYEES_RECORDS VALUES ('SHAAGR456', 'Shashank', 'Agrawal', 1234567890, 'Male', NULL, NULL, 27, 'Married', NULL, NULL, 'shanky_rmn@yahoomail.co.in', CURRENT_DATE, NULL, NULL, 'admin', NULL, NULL, NULL)");
+		psInsert = conn.prepareStatement("INSERT INTO EMPLOYEES_RECORDS VALUES ('SHAAGR456', 'Shashank', 'Agrawal', 1234567890, 'Male', NULL, NULL, 27, 'Married', NULL, NULL, 'shanky_rmn@yahoomail.co.in', CURRENT_DATE, NULL, NULL, NULL, NULL, NULL, 'admin', NULL, NULL, NULL)");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO EMPLOYEES_RECORDS VALUES ('SHAAGR789', 'Shashank', 'Agrawal', 1234567890, 'Male', NULL, NULL, 27, 'Married', NULL, NULL, 'shashank180287@gmail.com', CURRENT_DATE, NULL, NULL, 'customer1', NULL, NULL, NULL)");
+		psInsert = conn.prepareStatement("INSERT INTO EMPLOYEES_RECORDS VALUES ('SHAAGR789', 'Shashank', 'Agrawal', 1234567890, 'Male', NULL, NULL, 27, 'Married', NULL, NULL, 'shashank180287@gmail.com', CURRENT_DATE, NULL, NULL, NULL, NULL, NULL, 'customer1', NULL, NULL, NULL)");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO TRANSECTION_MODE values (1, 'CASH', 'Paid by cash')");
+		// Transaction Mode
+		psInsert = conn.prepareStatement("INSERT INTO TRANSECTION_MODE values (1, 'Cash', 'Paid by cash')");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO VENDOR_CATEGORY VALUES (1, 'Electronics Provider', 'Electronic Items Provider')");
+		psInsert = conn.prepareStatement("INSERT INTO TRANSECTION_MODE values (2, 'Cheque', 'Paid by cheque')");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO PRODUCT_CATEGORY VALUES (1, 'Electronics', 'Electronics')");
+		psInsert = conn.prepareStatement("INSERT INTO TRANSECTION_MODE values (3, 'ATM', 'ATM')");
+		psInsert.executeUpdate();
+		psInsert = conn.prepareStatement("INSERT INTO TRANSECTION_MODE values (4, 'Online Transfer', 'Online Transfer')");
+		psInsert.executeUpdate();
+		psInsert = conn.prepareStatement("INSERT INTO TRANSECTION_MODE values (5, 'POS', 'Point Of Sale')");
 		psInsert.executeUpdate();
 	}
 }

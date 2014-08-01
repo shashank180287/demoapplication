@@ -30,14 +30,14 @@ public class SearchProductsButtonListener extends JFrame implements
 	private List<ProductRecord> productRecords;
 	
 	private final AddingNewSalesRecordListener listener1;
-	private final AddNewProductSupplyListener listener2;
+	private final AddNewProductSupplyDetailsListener listener2;
 	
 	public SearchProductsButtonListener(AddingNewSalesRecordListener listener) {
 		this.listener1 = listener;
 		this.listener2 =null;
 	}
 	
-	public SearchProductsButtonListener(AddNewProductSupplyListener listener) {
+	public SearchProductsButtonListener(AddNewProductSupplyDetailsListener listener) {
 		this.listener2 = listener;
 		this.listener1 = null;
 	}

@@ -32,7 +32,7 @@ public class RecordKeepingRepository {
 	}
 	
 	public static void addRecordKeeping(RecordKeeping recordKeeping) {
-		String query = "INSERT INTO RECORD_KEEPING VALUES ("+getCurrentIdCursor()+1+",'"
+		String query = "INSERT INTO RECORD_KEEPING VALUES ("+(getCurrentIdCursor()+1)+",'"
 				+ recordKeeping.getType() + "','"
 				+ recordKeeping.getTag() + "','"
 				+ recordKeeping.getComment() + "')";

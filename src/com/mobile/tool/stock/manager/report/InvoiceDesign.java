@@ -193,7 +193,7 @@ public class InvoiceDesign {
 			}
 			OutputStream stream = new FileOutputStream(new File(filePath+"demo.pdf"));
 			report.toPdf(stream);
-			report.show(false);
+			report.show();
 		} catch (DRException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {

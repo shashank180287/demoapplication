@@ -34,7 +34,7 @@ public class VendorRecordRepository {
 		try{
 			vendorRecordInDb = jdbcTemplate.executeQuery(query);
 			while(vendorRecordInDb.next()){
-				int vendorCategoryId = vendorRecordInDb.getInt("vendor_category_id");
+				int vendorCategoryId = vendorRecordInDb.getInt("vendor_cat_id");
 				VendorCategory vendorCategory = VendorCategoryRepository.getVendorCategoryByCategoryId(vendorCategoryId+"");
 				String username = vendorRecordInDb.getString("username");
 				UserLoginDetails userLoginDetails = UserLoginDetailsRepository.getUserLoginDetailsByUsername(username);
@@ -71,5 +71,31 @@ public class VendorRecordRepository {
 	
 	private static int getRandomNo() {
 		return (int) (Math.random()*1000);
+	}
+
+	public static void updateVendorRecord(VendorRecord vendorRecord) {
+		verifyVendorCode(vendorRecord.getVendorCode());
+		String query = "UPDATE VENDOR_RECORD SET vendor_cat_id="+ vendorRecord.getVendorCategory().getVendorCategoryId() 
+				+ ", name='" + vendorRecord.getName()
+				+ "', title='" + vendorRecord.getTitle()
+				+ "', description='" + vendorRecord.getDescription()
+				+ "', mobile_number=" + vendorRecord.getMobilenumber()
+				+ ", email='" + vendorRecord.getEmail()
+				+ "', contact_address='" + vendorRecord.getContactAddress()
+				+ "', permanent_address='" + vendorRecord.getPermanentAddress()
+				+ "', website='" + vendorRecord.getWebsite()
+				+ "' WHERE vendor_code='"+vendorRecord.getVendorCode()+"'";
+		jdbcTemplate.executeUpdate(query);
+	}
+
+	public static void removeVendorRecord(String vendorCode) {
+		verifyVendorCode(vendorCode);
+		String query = "DELETE FROM VENDOR_RECORD WHERE vendor_code='"+vendorCode+"'";
+		jdbcTemplate.executeUpdate(query);
+	}
+	
+	private static void verifyVendorCode(String vendorCode) {
+		if(vendorCode==null)
+			throw new IllegalArgumentException("Please pass proper id");
 	}
 }

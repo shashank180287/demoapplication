@@ -55,16 +55,16 @@ public class DatabaseInitialiser {
 		stmt.executeUpdate(createString);
 
 		createString = "CREATE TABLE PRODUCT_CATEGORY ("
-				+ "category_id integer primary key,"
-				+ "category_name varchar(50),"
-				+ "category_description varchar(100)" + ")";
+				+ "product_cat_id integer primary key,"
+				+ "product_cat_name varchar(50),"
+				+ "product_cat_desc varchar(100)" + ")";
 		stmt = conn.createStatement();
 		stmt.executeUpdate(createString);
 
 		createString = "CREATE TABLE VENDOR_CATEGORY ("
-				+ "vendor_category_id integer primary key,"
-				+ "vendor_category_name varchar(50),"
-				+ "vendor_category_desc varchar(100)" + ")";
+				+ "vendor_cat_id integer primary key,"
+				+ "vendor_cat_name varchar(50),"
+				+ "vendor_cat_desc varchar(100)" + ")";
 		stmt = conn.createStatement();
 		stmt.executeUpdate(createString);
 
@@ -94,7 +94,7 @@ public class DatabaseInitialiser {
 
 		createString = "CREATE TABLE VENDOR_RECORD ("
 				+ "vendor_code varchar(50) primary key,"
-				+ "vendor_category_id integer,"
+				+ "vendor_cat_id integer,"
 				+ "name varchar(100),"
 				+ "mobile_number BIGINT,"
 				+ "email varchar(50),"
@@ -105,14 +105,14 @@ public class DatabaseInitialiser {
 				+ "description varchar(100),"
 				+ "username varchar(50),"
 				+ "FOREIGN KEY (username) REFERENCES USER_LOGIN_DETAILS(username),"
-				+ "FOREIGN KEY (vendor_category_id) REFERENCES VENDOR_CATEGORY(vendor_category_id)"
+				+ "FOREIGN KEY (vendor_cat_id) REFERENCES VENDOR_CATEGORY(vendor_cat_id)"
 				+ ")";
 		stmt = conn.createStatement();
 		stmt.executeUpdate(createString);
 
 		createString = "CREATE TABLE PRODUCT_RECORD ("
 				+ "product_code varchar(50) primary key,"
-				+ "product_category_id integer,"
+				+ "product_cat_id integer,"
 				+ "name varchar(100),"
 				+ "description varchar(255),"
 				+ "unit_price float,"
@@ -120,7 +120,7 @@ public class DatabaseInitialiser {
 				+ "order_count integer,"
 				+ "vendor_code varchar(50),"
 				+ "created	date,"
-				+ "FOREIGN KEY (product_category_id) REFERENCES PRODUCT_CATEGORY(category_id),"
+				+ "FOREIGN KEY (product_cat_id) REFERENCES PRODUCT_CATEGORY(product_cat_id),"
 				+ "FOREIGN KEY (vendor_code) REFERENCES VENDOR_RECORD(vendor_code)"
 				+ ")";
 		stmt = conn.createStatement();
@@ -132,8 +132,8 @@ public class DatabaseInitialiser {
 				+ "last_name varchar(100),"
 				+ "mobile_number BIGINT,"
 				+ "gender varchar(10),"
-				+ "qualification varchar(50),"
-				+ "profession varchar(50),"
+				+ "state_of_origin varchar(50),"
+				+ "local_govt varchar(50),"
 				+ "age	integer,"
 				+ "marital_status varchar(20),"
 				+ "job_description varchar(100),"
@@ -142,12 +142,65 @@ public class DatabaseInitialiser {
 				+ "employeed date,"
 				+ "job_title varchar(50),"
 				+ "contact_address varchar(255),"
+				+ "religion  varchar(50),"
+				+ "id_proof_doc_name varchar(50),"
+				+ "id_proof_doc_no varchar(255),"
 				+ "username varchar(50),"
 				+ "reference_1 varchar(100),"
 				+ "reference_2 varchar(100),"
 				+ "reference_3 varchar(100),"
 				+ "FOREIGN KEY (username) REFERENCES USER_LOGIN_DETAILS(username),"
 				+ "FOREIGN KEY (manager_code) REFERENCES EMPLOYEES_RECORDS(employee_code)"
+				+ ")";
+		stmt = conn.createStatement();
+		stmt.executeUpdate(createString);
+
+		createString = "CREATE TABLE EMPLOYEES_QUALIFICATION_DETAILS ("
+				+ "emp_qualification_id BIGINT primary key,"
+				+ "employee_code varchar(50),"
+				+ "degree_name varchar(100),"
+				+ "institution_name varchar(100),"
+				+ "start_date date,"
+				+ "end_date date,"
+				+ "percentage float,"
+				+ "FOREIGN KEY (employee_code) REFERENCES EMPLOYEES_RECORDS (employee_code)"
+				+ ")";
+		stmt = conn.createStatement();
+		stmt.executeUpdate(createString);
+
+		createString = "CREATE TABLE EMPLOYEES_PROFESSIONAL_DETAILS ("
+				+ "emp_prof_id BIGINT primary key,"
+				+ "employee_code varchar(50),"
+				+ "company_name varchar(100),"
+				+ "designation varchar(100),"
+				+ "start_date date,"
+				+ "end_date date,"
+				+ "responsibilities varchar(255),"
+				+ "FOREIGN KEY (employee_code) REFERENCES EMPLOYEES_RECORDS (employee_code)"
+				+ ")";
+		stmt = conn.createStatement();
+		stmt.executeUpdate(createString);
+
+		createString = "CREATE TABLE EMPLOYEES_PAYROLL_DETAIL ("
+				+ "emp_payroll_id BIGINT primary key,"
+				+ "	employee_code varchar(50),"
+				+ "	department varchar(100),"
+				+ "sick_leaves float,"
+				+ "casual_leaves float,"
+				+ "annual_leaves float,"
+				+ "study_leaves float,"
+				+ "other float,"
+				+ "days_of_leaves float,"
+				+ "leaves_start_date date,"
+				+ "leaves_end_date date,"
+				+ "loan_name varchar(50),"
+				+ "interest_rate float,"
+				+ "grade_level varchar(50),"
+				+ "allowances float,"
+				+ "initial_salary float,"
+				+ "upgrade_salary float,"
+				+ "employment_type varchar(50),"
+				+ "FOREIGN KEY (employee_code) REFERENCES EMPLOYEES_RECORDS (employee_code)"
 				+ ")";
 		stmt = conn.createStatement();
 		stmt.executeUpdate(createString);
@@ -165,12 +218,21 @@ public class DatabaseInitialiser {
 		stmt.executeUpdate(createString);
 
 		createString = "CREATE TABLE PRODUCT_SUPPLY ("
-				+ "supply_code varchar(50) primary key,"
+				+ "supply_code varchar(50) primary key," + "supply_date date,"
+				+ "supply_description varchar(255)," + "supplier varchar(50)"
+				+ ")";
+		stmt = conn.createStatement();
+		stmt.executeUpdate(createString);
+
+		createString = "CREATE TABLE PRODUCT_SUPPLY_DETAIL ("
+				+ "product_supply_detail_id integer primary key,"
+				+ "supply_code varchar(50),"
 				+ "product_code varchar(50),"
 				+ "total_items integer,"
 				+ "total_supplied integer,"
 				+ "current_stock integer,"
 				+ "current_item_count integer,"
+				+ "FOREIGN KEY (supply_code) REFERENCES PRODUCT_SUPPLY(supply_code),"
 				+ "FOREIGN KEY (product_code) REFERENCES PRODUCT_RECORD(product_code)"
 				+ ")";
 		stmt = conn.createStatement();
@@ -201,21 +263,36 @@ public class DatabaseInitialiser {
 				+ "tag varchar(255)," + "comment varchar(255)" + ")";
 		stmt = conn.createStatement();
 		stmt.executeUpdate(createString);
+
+		createString = "CREATE TABLE VISITOR_ENQUIRY_INFO ("
+				+ "id BIGINT primary key," + "name varchar(50),"
+				+ "mobile_number BIGINT," + "address varchar(255),"
+				+ "visit_purpose varchar(100)," + "date date,"
+				+ "comment varchar(255)" + ")";
+		stmt = conn.createStatement();
+		stmt.executeUpdate(createString);
 	}
-	
-	private static void initialiseStaticDataInDB(Connection conn) throws SQLException {
-		PreparedStatement psInsert = conn.prepareStatement("INSERT INTO USER_ROLE VALUES (1, 'admin', 'Stock Admin')");
+
+	private static void initialiseStaticDataInDB(Connection conn)
+			throws SQLException {
+		PreparedStatement psInsert = conn
+				.prepareStatement("INSERT INTO USER_ROLE VALUES (1, 'admin', 'Stock Admin')");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO USER_ROLE VALUES (2, 'customer', 'Customer/Vendor')");
+		psInsert = conn
+				.prepareStatement("INSERT INTO USER_ROLE VALUES (2, 'customer', 'Customer/Vendor')");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO USER_ROLE VALUES (3, 'employee', 'Stock Employee')");
+		psInsert = conn
+				.prepareStatement("INSERT INTO USER_ROLE VALUES (3, 'employee', 'Stock Employee')");
 		psInsert.executeUpdate();
 
-		psInsert = conn.prepareStatement("INSERT INTO USER_LOGIN_DETAILS VALUES ('admin', 'admin', 1)");
+		psInsert = conn
+				.prepareStatement("INSERT INTO USER_LOGIN_DETAILS VALUES ('admin', 'admin', 1)");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO USER_LOGIN_DETAILS VALUES ('customer1', 'customer1', 2)");
+		psInsert = conn
+				.prepareStatement("INSERT INTO USER_LOGIN_DETAILS VALUES ('customer1', 'customer1', 2)");
 		psInsert.executeUpdate();
-		psInsert = conn.prepareStatement("INSERT INTO USER_LOGIN_DETAILS VALUES ('employee1', 'employee1', 3)");
+		psInsert = conn
+				.prepareStatement("INSERT INTO USER_LOGIN_DETAILS VALUES ('employee1', 'employee1', 3)");
 		psInsert.executeUpdate();
 	}
 }

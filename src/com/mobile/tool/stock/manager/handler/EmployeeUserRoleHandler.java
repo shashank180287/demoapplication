@@ -23,6 +23,8 @@ import javax.swing.Timer;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.mobile.tool.stock.manager.entity.UserLoginDetails;
+import com.mobile.tool.stock.manager.repository.EmployeeRecordsRepository;
+import com.mobile.tool.stock.manager.view.HumanResourceTab;
 import com.mobile.tool.stock.manager.view.Settings;
 import com.mobile.tool.stock.manager.view.StockManagementTab;
 import com.mobile.tool.stock.manager.view.StockManagerDashboard;
@@ -34,6 +36,9 @@ public class EmployeeUserRoleHandler implements UserRoleHandler{
 	@Override
 	public void addTabs(JTabbedPane tabbedPane, UserLoginDetails userLoginDetails) {
 		tabbedPane.addTab("Stock Management", new StockManagementTab(UserRoleDefine.EMPLOYEE).build(userLoginDetails));
+		if(EmployeeRecordsRepository.isUserManager(userLoginDetails.getUsername())){
+			tabbedPane.addTab("Payroll Management", new HumanResourceTab().build(userLoginDetails));
+		}
 	}
 
 	@Override

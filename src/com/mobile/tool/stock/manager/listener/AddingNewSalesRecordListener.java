@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import com.mobile.tool.stock.manager.entity.CustomerRecord;
 import com.mobile.tool.stock.manager.entity.EmployeeRecord;
 import com.mobile.tool.stock.manager.entity.ProductRecord;
-import com.mobile.tool.stock.manager.entity.ProductSupply;
+import com.mobile.tool.stock.manager.entity.ProductSupplyDetails;
 import com.mobile.tool.stock.manager.entity.SalesRecord;
 import com.mobile.tool.stock.manager.entity.TransectionMode;
 import com.mobile.tool.stock.manager.entity.UserLoginDetails;
@@ -31,7 +31,7 @@ import com.mobile.tool.stock.manager.report.InvoiceDesign;
 import com.mobile.tool.stock.manager.repository.CustomerRecordsRepository;
 import com.mobile.tool.stock.manager.repository.EmployeeRecordsRepository;
 import com.mobile.tool.stock.manager.repository.ProductRecordRepository;
-import com.mobile.tool.stock.manager.repository.ProductSupplyRepository;
+import com.mobile.tool.stock.manager.repository.ProductSupplyDetailsRepository;
 import com.mobile.tool.stock.manager.repository.SaleRecordsRepository;
 import com.mobile.tool.stock.manager.repository.TransectionModeRepository;
 import com.mobile.tool.stock.manager.utils.SendingMailsUtility;
@@ -138,9 +138,9 @@ public class AddingNewSalesRecordListener extends JFrame implements ActionListen
 						salesTitleText.getText(), salesDescText.getText(),  (salesAmtText.getText()!=null?Float.valueOf(salesAmtText.getText()):0.0F), 
 						(confirmAmtText.getText()!=null? Float.valueOf(confirmAmtText.getText()):0.0F), mode , customer , employee , commentText.getText(), new Date(System.currentTimeMillis()));
 				SaleRecordsRepository.addSalesRecord(salesRecord);
-				ProductSupply productSupply = ProductSupplyRepository.getProductSupplyByProductCode(salesRecord.getProduct().getProductCode());
-				productSupply.setCurrentItemCount(productSupply.getCurrentItemCount()-salesRecord.getNoOfItems());
-				ProductSupplyRepository.updateProductSupply(productSupply);
+				ProductSupplyDetails productSupplyDetails = ProductSupplyDetailsRepository.getLastProductSupplyByProductCode(salesRecord.getProduct().getProductCode());
+				productSupplyDetails.setCurrentItemCount(productSupplyDetails.getCurrentItemCount()-salesRecord.getNoOfItems());
+				ProductSupplyDetailsRepository.updateProductSupplyDetails(productSupplyDetails);
 				
 				InvoiceDesign.printInvoiceBill(salesRecord);
 				

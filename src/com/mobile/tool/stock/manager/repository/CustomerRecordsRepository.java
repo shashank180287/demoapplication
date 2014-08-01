@@ -126,4 +126,29 @@ public class CustomerRecordsRepository {
 		}
 
 	}
+
+	public static void updateCustomerRecord(CustomerRecord customerRecord) {
+		verifyCustomerCode(customerRecord.getCustomerCode());
+		String query = "UPDATE CUSTOMER_RECORD SET first_name='"	+ customerRecord.getFirstName() 
+				+ "', last_name='" + customerRecord.getLastName()
+				+ "', mobile_number=" + customerRecord.getMobileNumber()
+				+ ", email='" + customerRecord.getEmail()
+				+ "', gender='" + customerRecord.getGender()
+				+ "', contact_address='" + customerRecord.getContactAddress()
+				+ "', website='" + customerRecord.getWebsite()
+				+ "', description='" + customerRecord.getDescription()
+				+ "' WHERE customer_code='"+customerRecord.getCustomerCode()+"'";
+		jdbcTemplate.executeUpdate(query);
+	}
+
+	public static void removeCustomerRecord(String customerCode) {
+		verifyCustomerCode(customerCode);
+		String query = "DELETE FROM CUSTOMER_RECORD WHERE customer_code='"+customerCode+"'";
+		jdbcTemplate.executeUpdate(query);
+	}
+	
+	private static void verifyCustomerCode(String customerCode) {
+		if(customerCode==null)
+			throw new IllegalArgumentException("Please pass proper id");
+	}
 }

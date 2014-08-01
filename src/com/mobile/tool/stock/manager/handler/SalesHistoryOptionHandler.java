@@ -33,4 +33,12 @@ public class SalesHistoryOptionHandler {
 		SalesRecord.tableColumnNames);
 		
 	}
+	
+	public static void handleSalesHistoryOptionSelectionForManager(
+			StockManagementTableModel tableModel,
+			String managerUsername) {
+		tableModel.refreshTableData(SalesRecord.getTableModel(
+				SaleRecordsRepository.getSaleRecordForManagerSupervisee(managerUsername)), 
+				SalesRecord.tableColumnNames);
+	}
 }

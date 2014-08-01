@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mobile.tool.stock.manager.entity.ProductCatagory;
 import com.mobile.tool.stock.manager.repository.ProductCategoryRepository;
+import com.mobile.tool.stock.manager.ui.listener.adder.AddNewProductRecordListener;
+import com.mobile.tool.stock.manager.ui.listener.updater.UpdateProductRecordListener;
 
 public class SearchProductCategoryButtonListener extends JFrame implements
 		ActionListener {
@@ -29,10 +31,15 @@ public class SearchProductCategoryButtonListener extends JFrame implements
 	String searchCategoryColumns[] = {"Category Name", "Description"};
 	private List<ProductCatagory> categoryRecords;
 	
-	private final AddNewProductRecordListener listener;
+	private AddNewProductRecordListener addListener;
+	private UpdateProductRecordListener updateListener;
 	
 	public SearchProductCategoryButtonListener(AddNewProductRecordListener listener) {
-		this.listener = listener;
+		this.addListener = listener;
+	}
+
+	public SearchProductCategoryButtonListener(UpdateProductRecordListener listener) {
+		this.updateListener = listener;
 	}
 	
 	public void createAndShowGUI() {
@@ -55,7 +62,10 @@ public class SearchProductCategoryButtonListener extends JFrame implements
 		        Point p = me.getPoint();
 		        int row = table.rowAtPoint(p);
 		        if (me.getClickCount() == 2 && categoryRecords!=null && categoryRecords.size()>=row) {
-		            listener.setProductCategoryText(categoryRecords.get(row).getCategoryName());
+		            if(addListener!=null)
+		            	addListener.setProductCategoryText(categoryRecords.get(row).getCategoryName());
+		            else
+		            	updateListener.setProductCategoryText(categoryRecords.get(row).getCategoryName());
 		            closeWindow();
 		        }
 		    }

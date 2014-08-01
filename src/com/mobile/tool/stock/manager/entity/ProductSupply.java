@@ -1,31 +1,32 @@
 package com.mobile.tool.stock.manager.entity;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ProductSupply {
 
 	private String supplyCode;
-	private ProductRecord product;
-	private int totalItems;
-	private int totalSupplied;
-	private int currentStock;
-	private int currentItemCount;
-	public static String[] tableColumnNames = new String[]{"Supply Code", "Product", "Total Items", "Current Stock", "Current Items"};
+	private Date supplyDate;
+	private String supplyDetails;
+	private String supplier;
+	private List<ProductSupplyDetails> productSupplyDetails;
+	public static String[] tableColumnNames = new String[]{"Supply Code", "Supply Date", "Description", "Supplier", "Item Counts"};
+	public static String[] currentStockColumnNames = new String[]{"Product Name", "Current Stock", "Status"};
+	private static final int LOW_STOCK_COUNT = 10;
 	
 	public ProductSupply() {
+	
 	}
 
-	public ProductSupply(String supplyCode, ProductRecord product,
-			int totalItems, int totalSupplied, int currentStock,
-			int currentItemCount) {
+	public ProductSupply(String supplyCode, Date supplyDate,
+			String supplyDetails, String supplier) {
 		super();
 		this.supplyCode = supplyCode;
-		this.product = product;
-		this.totalItems = totalItems;
-		this.totalSupplied = totalSupplied;
-		this.currentStock = currentStock;
-		this.currentItemCount = currentItemCount;
+		this.supplyDate = supplyDate;
+		this.supplyDetails = supplyDetails;
+		this.supplier = supplier;
 	}
 
 	public String getSupplyCode() {
@@ -36,59 +37,72 @@ public class ProductSupply {
 		this.supplyCode = supplyCode;
 	}
 
-	public ProductRecord getProduct() {
-		return product;
+	public Date getSupplyDate() {
+		return supplyDate;
 	}
 
-	public void setProduct(ProductRecord product) {
-		this.product = product;
+	public void setSupplyDate(Date supplyDate) {
+		this.supplyDate = supplyDate;
 	}
 
-	public int getTotalItems() {
-		return totalItems;
+	public String getSupplyDetails() {
+		return supplyDetails;
 	}
 
-	public void setTotalItems(int totalItems) {
-		this.totalItems = totalItems;
+	public void setSupplyDetails(String supplyDetails) {
+		this.supplyDetails = supplyDetails;
 	}
 
-	public int getTotalSupplied() {
-		return totalSupplied;
+	public String getSupplier() {
+		return supplier;
 	}
 
-	public void setTotalSupplied(int totalSupplied) {
-		this.totalSupplied = totalSupplied;
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
 	}
 
-	public int getCurrentStock() {
-		return currentStock;
+	public List<ProductSupplyDetails> getProductSupplyDetails() {
+		return productSupplyDetails;
 	}
 
-	public void setCurrentStock(int currentStock) {
-		this.currentStock = currentStock;
-	}
-
-	public int getCurrentItemCount() {
-		return currentItemCount;
-	}
-
-	public void setCurrentItemCount(int currentItemCount) {
-		this.currentItemCount = currentItemCount;
+	public ProductSupply setProductSupplyDetails(
+			List<ProductSupplyDetails> productSupplyDetails) {
+		this.productSupplyDetails = productSupplyDetails;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "ProductSupply [supplyCode=" + supplyCode + ", product="
-				+ product + ", totalItems=" + totalItems + ", totalSupplied="
-				+ totalSupplied + ", currentStock=" + currentStock
-				+ ", currentItemCount=" + currentItemCount + "]";
+		return "ProductSupply [supplyCode=" + supplyCode + ", supplyDate="
+				+ supplyDate + ", supplyDetails=" + supplyDetails
+				+ ", supplier=" + supplier + ", productSupplyDetails="
+				+ productSupplyDetails + "]";
 	}
-	
+
 	public static String[][] getTableModel(List<ProductSupply> productSupplies) {
 		List<String[]> tableModel = new ArrayList<>();
 		for (ProductSupply productSupply : productSupplies) {
-			String[] supply = new String[]{productSupply.getSupplyCode(), productSupply.getProduct().getName(), 
-					productSupply.getTotalItems()+"", productSupply.getCurrentStock()+"", productSupply.getCurrentItemCount()+""};
+			String[] supply = new String[]{productSupply.getSupplyCode(), productSupply.getSupplyDate().toString(), 
+					productSupply.getSupplyDetails(), productSupply.getSupplier(), (productSupply.getProductSupplyDetails()!=null?productSupply.getProductSupplyDetails().size()+"":0+"")};
+			tableModel.add(supply);
+		}
+		String[][] tableModelArray = new String[tableModel.size()][];
+		tableModel.toArray(tableModelArray);
+		return tableModelArray;
+	}
+
+	public static String[][] getTableModelForCurrentStock(
+			Map<String, Integer> currentStockByProduct) {
+		List<String[]> tableModel = new ArrayList<>();
+		for (String productName : currentStockByProduct.keySet()) {
+			Integer currentStock = currentStockByProduct.get(productName);
+			String stockStatus = "Proper Stock";
+			if(currentStock==null || currentStock==0){
+				stockStatus = "Out of Stock";
+			}else if(currentStock<LOW_STOCK_COUNT){
+				stockStatus = "Low Stock";
+			}
+			String[] supply = new String[]{productName, currentStock+"",  stockStatus};
 			tableModel.add(supply);
 		}
 		String[][] tableModelArray = new String[tableModel.size()][];
