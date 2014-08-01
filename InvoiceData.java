@@ -75,7 +75,8 @@ public class InvoiceData {
 		item.setQuantity(salesRecord.getNoOfItems());
 		item.setUnitprice(new BigDecimal(salesRecord.getProduct().getUnitPrice()));
 		item.setSaleamount(new BigDecimal(salesRecord.getSalesAmount()));
-		item.setConfirmamount(new BigDecimal(salesRecord.getConfirmAmount()));
+		item.setAmountpaid(new BigDecimal(salesRecord.getAmountPaid()));
+		item.setBalance(new BigDecimal(salesRecord.getBalance()));
 		return item;
 	}
 
@@ -121,7 +122,8 @@ public class InvoiceData {
 		item.setQuantity(quantity);
 		item.setUnitprice(unitprice);
 		item.setSaleamount(new BigDecimal(987654));
-		item.setConfirmamount(new BigDecimal(45678));
+		item.setAmountpaid(new BigDecimal(900000));
+		item.setBalance(new BigDecimal(87654));
 		return item;
 	}
 }
