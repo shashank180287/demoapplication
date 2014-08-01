@@ -55,7 +55,9 @@ import com.mobile.tool.stock.manager.entity.SalesRecord;
 public class InvoiceDesign {
 	private InvoiceData data;
 	private AggregationSubtotalBuilder<BigDecimal> totalSum;
-
+	private AggregationSubtotalBuilder<BigDecimal> totalAmtPaid;
+	private AggregationSubtotalBuilder<BigDecimal> totalBalance;
+	
 	public JasperReportBuilder build(SalesRecord salesRecord) throws DRException {
 		data = new InvoiceData(salesRecord);
 		JasperReportBuilder report = report();
@@ -77,19 +79,20 @@ public class InvoiceDesign {
 		TextColumnBuilder<Integer> quantityColumn = col.column("Quantity", "quantity", type.integerType())
 			.setHorizontalAlignment(HorizontalAlignment.CENTER);
 		TextColumnBuilder<BigDecimal> unitPriceColumn = col.column("Unit Price", "unitprice", Templates.currencyType);
-		TextColumnBuilder<BigDecimal> saleAmtColumn =  col.column("Sales Price", "saleamount", Templates.currencyType);
-		TextColumnBuilder<BigDecimal> confAmtColumn = col.column("Amount Paid", "amountPaid", Templates.currencyType);
+		TextColumnBuilder<BigDecimal> amtPaidColumn =  col.column("Amount Paid", "amountpaid", Templates.currencyType);
+		TextColumnBuilder<BigDecimal> balanceColumn = col.column("Balance", "balance", Templates.currencyType);
 
-		TextColumnBuilder<BigDecimal> totalColumn = confAmtColumn.add(0)
-			.setTitle("Total Price")
-			.setDataType(Templates.currencyType)
+		TextColumnBuilder<BigDecimal> salesAmtColumn = col.column("Sales Price", "saleamount", Templates.currencyType)
 			.setRows(2)
 			.setStyle(subtotalStyle);
 		//init subtotals
-		totalSum = sbt.sum(totalColumn)
+		totalSum = sbt.sum(salesAmtColumn)
 			.setLabel("Total:")
 			.setLabelStyle(Templates.boldStyle);
 
+		totalAmtPaid = sbt.sum(amtPaidColumn);
+		totalBalance = sbt.sum(balanceColumn);
+				
 		//configure report
 		report
 			.setTemplate(Templates.reportTemplate)
@@ -97,15 +100,15 @@ public class InvoiceDesign {
 			.setSubtotalStyle(subtotalStyle)
 			//columns
 			.columns(
-				rowNumberColumn, descriptionColumn, quantityColumn, unitPriceColumn, totalColumn, saleAmtColumn, confAmtColumn)
+				rowNumberColumn, descriptionColumn, quantityColumn, unitPriceColumn, salesAmtColumn, amtPaidColumn, balanceColumn)
 			.columnGrid(
 				rowNumberColumn, descriptionColumn, quantityColumn, unitPriceColumn,
 				grid.horizontalColumnGridList()
-					.add(totalColumn).newRow()
-					.add(saleAmtColumn, confAmtColumn))
+					.add(salesAmtColumn).newRow()
+					.add(amtPaidColumn, balanceColumn))
 			//subtotals
 			.subtotalsAtSummary(
-				totalSum, sbt.sum(saleAmtColumn), sbt.sum(confAmtColumn))
+				totalSum, totalAmtPaid, totalBalance)
 			//band components
 			.title(
 				Templates.createTitleComponent("Invoice No.: " + data.getInvoice().getId()),
@@ -117,7 +120,7 @@ public class InvoiceDesign {
 			.summary(
 				cmp.text(data.getInvoice().getShipping()).setValueFormatter(Templates.createCurrencyValueFormatter("Shipping:")).setStyle(shippingStyle),
 				cmp.horizontalList(
-					cmp.text(new TotalPaymentExpression()).setStyle(Templates.bold18CenteredStyle)),
+					cmp.text(new TotalBalanceExpression()).setStyle(Templates.bold18CenteredStyle)),
 				cmp.verticalGap(30),
 				cmp.text("Thank you for your business").setStyle(Templates.bold12CenteredStyle))
 			.setDataSource(data.createDataSource());
@@ -142,14 +145,14 @@ public class InvoiceDesign {
 		}
 	}
 
-	private class TotalPaymentExpression extends AbstractSimpleExpression<String> {
+	private class TotalBalanceExpression extends AbstractSimpleExpression<String> {
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public String evaluate(ReportParameters reportParameters) {
-			BigDecimal total = reportParameters.getValue(totalSum);
-			BigDecimal shipping = total.add(data.getInvoice().getShipping());
-			return "Total payment: " + Templates.currencyType.valueToString(shipping, reportParameters.getLocale());
+			BigDecimal total = reportParameters.getValue(totalBalance);
+			BigDecimal shipping = total.subtract(data.getInvoice().getShipping());
+			return "Total Balance: " + Templates.currencyType.valueToString(shipping, reportParameters.getLocale());
 		}
 	}
 
