@@ -1,0 +1,13 @@
+db.schema.sql
+@152
+
+	amount_paid float,
+	balance float,
+	
+DatabaseInitialiser.java
+@186
+
+				+ "amount_paid float,"
+				+ "balance float,"
+				
+				

@@ -22,8 +22,11 @@ public class EmployeePayrollDetails {
 	private double upgradeSalary;
 	private String employmentType; // Full Time, Contract
 
+<<<<<<< HEAD
 	public static String[] attributeColumnNames = new String[]{"Attribute","Value"};
 	
+=======
+>>>>>>> origin/master
 	public EmployeePayrollDetails(int id, EmployeeRecord employeeRecord,
 			String department, double sickLeaves, double casualLeaves,
 			double annualLeaves, double studyLeaves, double other,
@@ -210,6 +213,7 @@ public class EmployeePayrollDetails {
 				+ ", initialSalary=" + initialSalary + ", upgradeSalary="
 				+ upgradeSalary + ", employmentType=" + employmentType + "]";
 	}
+<<<<<<< HEAD
 	
 	public static String[][] getTableModel(
 			EmployeePayrollDetails employeePayrollDetails) {
@@ -233,4 +237,6 @@ public class EmployeePayrollDetails {
 				};
 			return tableModelArray;
 		}
+=======
+>>>>>>> origin/master
 }
