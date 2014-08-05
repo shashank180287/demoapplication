@@ -1,0 +1,101 @@
+db_schema.sql
+
+CREATE TABLE OWER_DETAILS (
+	id integer primary key,
+	sale_code varchar(50),
+	customer_name varchar(50),
+	total_amount float,
+	amount_paid float,
+	amount_owe float,
+	purchase_date date,
+);	
+
+
+DatabaseInitialiser.java
+@218
+
+		createString = "CREATE TABLE OWER_DETAILS ("
+				+ "id integer primary key,"
+				+ "sale_code varchar(50),"
+				+ "customer_name varchar(50),"
+				+ "total_amount float,"
+				+ "amount_paid float,"
+				+ "amount_owe float,"
+				+ "purchase_date date,"
+			+ ")";
+		stmt = conn.createStatement();
+		stmt.executeUpdate(createString);
+		
+
+
+AdminRoleMouseListener.java
+@274
+
+				OwerDetailsListOptionHandler.handleOwerListOptionSelectionForAdmin(
+						tableModel);
+				addButtonsInPanel("Add Ower", new AddOwerDetailsRecordListener(this));
+				
+@333
+
+	public void reloadOwerListDetailTableData() {
+		OwerDetailsListOptionHandler.handleOwerListOptionSelectionForAdmin(tableModel);	
+	}
+	
+
+SalesHistoryOptionHandler.java
+@45 (Remove)
+	public static void handleOwerListOptionSelectionForAdmin(
+			StockManagementTableModel tableModel) {
+		tableModel.refreshTableData(SalesRecord.getTableModelForOwerList(
+				SaleRecordsRepository.getSaleRecordWhereCompanyOweMoney()), 
+				SalesRecord.owerTableColumnNames);
+	}
+	
+SalesRecord.java
+@24(Remove)
+	public static String[] owerTableColumnNames = new String[]{"Sale Code", "Customer Name","Amount","Amount Paid","Amount Owing",
+		"Purchase Date"};
+		
+		
+@176 (Remove)
+	public static String[][] getTableModelForOwerList(List<SalesRecord> salesRecords) {
+		List<String[]> tableModel = new ArrayList<String[]>();
+		for (SalesRecord saleRecord : salesRecords) {
+			String[] customer = new String[]{saleRecord.getSalesCode(),
+					saleRecord.getCustomer().getFirstName()+" "+saleRecord.getCustomer().getLastName(), 
+					saleRecord.getSalesAmount()+"", saleRecord.getAmountPaid()+"", 
+					saleRecord.getBalance()+"", saleRecord.getCreated().toString()};
+			tableModel.add(customer);
+		}
+		 String[][] tableModelArray = new String[tableModel.size()][];
+		 tableModel.toArray(tableModelArray);
+		return tableModelArray;
+	}
+	
+	
+	
+SaleRecordsRepository.java
+@215
+
+	public static SalesRecord getSaleRecordBySalesCode(String salesCode) {
+		List<SalesRecord> salesRecords = getSalesRecordByQuery("SELECT * FROM SALES_RECORDS WHERE sales_code='"+salesCode+"'");
+		return (salesRecords.size()>0?salesRecords.get(0):null);
+	}
+
+	public static void updateSalesRecordAmountPaidAndBalance(String salesCode,
+			float amountPaid, float balance) {
+		String query = "UPDATE SALES_RECORDS SET amount_paid ="+amountPaid+", balance="+balance+" WHERE sales_code='"+salesCode+"'";
+		jdbcTemplate.executeUpdate(query);
+		
+	}
+	
+
+AddingNewSalesRecordListener.java
+@170	
+        if(salesRecord.getBalance()>0){
+					OwerDetailsRepository.addOwerDetails(new OwerDetails(0, salesRecord.getSalesCode(), salesRecord.getCustomer().getFirstName()+" "+salesRecord.getCustomer().getLastName(),
+							salesRecord.getSalesAmount(), 
+							salesRecord.getAmountPaid(), 
+							salesRecord.getBalance(),
+							salesRecord.getCreated()));
+				}	
