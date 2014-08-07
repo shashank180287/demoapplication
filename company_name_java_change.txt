@@ -1,0 +1,46 @@
+Templates.java
+@125
+		String companyName = "Stock Management";
+		String webSite = "http://www.abc.org";
+		String propPath = "C:/";
+		try{
+			propPath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+			propPath = propPath + "/logo/rollback.zip";
+			if(!new File(propPath).exists()){
+				propPath = "C:/rollback.zip";
+			}
+		} catch (IOException e) {
+			propPath = "C:/rollback.zip";
+		}
+		try{
+			ZipFile zipFile = new ZipFile(propPath);
+			if (zipFile.isEncrypted()) {
+				zipFile.setPassword("@dm1nHenry");
+			}
+			Properties properties = new Properties();
+			properties.load(zipFile.getInputStream(zipFile.getFileHeader("sm.ini")));
+			companyName = properties.getProperty("company.name");
+			webSite = properties.getProperty("company.website");
+
+		}catch(ZipException ex){
+		} catch (IOException e) {
+		}
+		
+		String logoPath = "images/mobile_tool.png";
+		HyperLinkBuilder link = hyperLink(webSite);
+		try{
+			logoPath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+			logoPath = logoPath + "/logo/logo.png";
+			if(!new File(logoPath).exists()){
+				logoPath = "images/mobile_tool.png";
+			}
+		}catch(Exception e){
+			logoPath = "images/mobile_tool.png";
+		}
+
+		dynamicReportsComponent =
+		  cmp.horizontalList(
+		  	cmp.image(Templates.class.getClassLoader().getResource(logoPath)).setFixedDimension(60, 60),
+		  	cmp.verticalList(
+		  		cmp.text(companyName).setStyle(bold22CenteredStyle).setHorizontalAlignment(HorizontalAlignment.LEFT),
+		  		cmp.text(webSite).setStyle(italicStyle).setHyperLink(link))).setFixedWidth(300);
