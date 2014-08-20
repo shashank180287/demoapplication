@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+	<title>RIMS: Movie/Game Renting Demo</title>
+</head>
+<body>
+	<f:view>
+		<h:form>
+  &nbsp;&nbsp;<h:outputText value="First Name." />
+			<br> &nbsp;&nbsp; 
+			<h:inputText value="#{userInfoBean.firstName}" />
+			<br>
+			<br> &nbsp;&nbsp; 
+			<h:outputText value="Last Name" />
+			<br> &nbsp;&nbsp; 
+			<h:inputText value="#{userInfoBean.lastName}" />
+			<br>
+			<br> &nbsp;&nbsp; 
+			<h:outputText value="Address" />
+			<br> &nbsp;&nbsp; 
+			<h:inputText value="#{userInfoBean.streetAddress}" />
+			<br>
+			<br>
+			<h:commandButton value="Add User" action="welcome" />
+		</h:form>
+	</f:view>
+</body>
+</html>
