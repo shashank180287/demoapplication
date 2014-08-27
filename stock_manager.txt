@@ -1,1 +1,102 @@
-%09d
+InvoiceDesign.java 
+@70(remove)
+		StyleBuilder shippingStyle = stl.style(Templates.boldStyle)
+			.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+
+@121(remove)
+
+cmp.text(data.getInvoice().getShipping()).setValueFormatter(Templates.createCurrencyValueFormatter("Shipping:")).setStyle(shippingStyle),
+				
+				
+@150 (Update)
+public String evaluate(ReportParameters reportParameters) {
+			BigDecimal total = reportParameters.getValue(totalBalance);
+			return "Total Balance: " + Templates.currencyType.valueToString(total, reportParameters.getLocale());
+		}
+
+AddingNewSalesRecordListener.java
+@165(replace)
+				String salesCode = SaleRecordsRepository.addSalesRecord(salesRecord);
+				salesRecord.setSalesCode(salesCode);
+				
+				
+SaleRecordsRepository.java		
+@25
+	public static String addSalesRecord(SalesRecord salesRecord) {
+		String saleCode = salesRecord.getProduct().getName().toUpperCase()
+				.substring(0, 3) + System.currentTimeMillis();
+		String query = "INSERT INTO SALES_RECORDS VALUES ('"
+				+ saleCode + "','"
+				+ salesRecord.getProduct().getProductCode() + "',"
+				+ salesRecord.getNoOfItems() + ",'"
+				+ salesRecord.getSalesTitle() + "','"
+				+ salesRecord.getSalesDesc() + "',"
+				+ salesRecord.getSalesAmount() + ","
+				+ salesRecord.getAmountPaid() + ","
+				+ salesRecord.getBalance() + ","
+				+ salesRecord.getMode().getChannelId() + ",'"
+				+ salesRecord.getCustomer().getCustomerCode() + "',"
+				+ (salesRecord.getEmployee()!=null?"'"+salesRecord.getEmployee().getEmployeeCode()+"'":null) + ",'"
+				+ salesRecord.getComments() + "','" 
+				+ salesRecord.getCreated()
+				+ "')";
+		jdbcTemplate.executeUpdate(query);
+		return saleCode;
+	}
+	
+
+SendingMailsUtility.java
+@29(replace)
+  private static final String GMAIL_USERNAME = "mobile.toolutility@gmail.com";
+	private static final String GMAIL_PASSWORD = "27021987";
+	
+@65
+		String email = "mobile.toolutility@gmail.com";
+		try{
+			String propPath = "C:/";
+			try{
+				propPath = URLDecoder.decode(StockDashboardTab.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+				propPath = propPath + "/logo/rollback.zip";
+				if(!new File(propPath).exists()){
+					propPath = "C:/rollback.zip";
+				}
+			} catch (IOException e) {
+				propPath = "C:/rollback.zip";
+			}
+			try{
+				ZipFile zipFile = new ZipFile(propPath);
+				if (zipFile.isEncrypted()) {
+					zipFile.setPassword("@dm1nHenry");
+				}
+				Properties properties = new Properties();
+				properties.load(zipFile.getInputStream(zipFile.getFileHeader("sm.ini")));
+				email = properties.getProperty("company.email");
+
+			}catch(ZipException ex){
+			} catch (IOException e) {
+			}
+			
+@69
+  msg.setFrom(new InternetAddress(email));
+  
+  
+AddingNewSalesRecordListener  
+@70
+		messageLabel = new JLabel("Hello World,Where there is will there is& nbsp;a way");
+		Timer timer = new Timer(100, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String oldText = messageLabel.getText();
+				String newText = oldText.substring(1) + oldText.substring(0, 1);
+				messageLabel.setText(newText);
+				
+			}
+		});
+		timer.start();
+		
+@222
+messageLabel.setBounds(0, 10, 700, 650);
+
+@250
+		add(messageLabel);
