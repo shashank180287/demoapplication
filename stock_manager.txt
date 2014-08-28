@@ -100,3 +100,8 @@ messageLabel.setBounds(0, 10, 700, 650);
 
 @250
 		add(messageLabel);
+
+
+
+messageLabel.setForeground(Color.red);
+messageLabel.setBounds(80, 10, 600, 30);
